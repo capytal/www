@@ -66,6 +66,7 @@ templ (p *IndexPage) section(id, logo, img, color string, linkLeft, linkRight st
 			<a
 				class={ "w-2rem md:w-10rem h-screen top-0 left-0 absolute flex justify-center items-center z-5",
 				"font-display color-#fff/50 no-underline" }
+				hx-boost="false"
 				href={ templ.SafeURL(linkLeft) }
 			>
 				&lt;
@@ -104,6 +105,7 @@ templ (p *IndexPage) section(id, logo, img, color string, linkLeft, linkRight st
 			<a
 				class={ "w-2rem md:w-10rem h-screen top-0 right-0 absolute flex justify-center items-center z-5",
 				"font-display color-#fff/50 no-underline" }
+				hx-boost="false"
 				href={ templ.SafeURL(linkRight) }
 			>
 				&gt;
