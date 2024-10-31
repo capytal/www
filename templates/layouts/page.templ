@@ -1,0 +1,91 @@
+package layouts
+
+import (
+	"embed"
+	"fmt"
+
+	"forge.capytal.company/capytal/www/assets"
+	"forge.capytal.company/capytal/www/configs"
+)
+
+type PageInfo struct {
+	Title       string
+	Description string
+	Author      string
+	Keywords    string
+	ThemeColor  string
+	Heading     templ.Component
+}
+
+func pageInfo(info []PageInfo) PageInfo {
+	if len(info) != 0 {
+		return info[0]
+	}
+	return PageInfo{}
+}
+
+templ LinkCSSFile(href string, fs embed.FS, file string) {
+	if configs.DEVELOPMENT {
+		<link rel="preload" href={ href } as="style"/>
+		<link rel="stylesheet" href={ href }/>
+	} else if f, err := fs.ReadFile(file); err != nil {
+		<link rel="preload" href={ href } as="style"/>
+		<link rel="stylesheet" href={ href }/>
+	} else {
+		@templ.Raw(fmt.Sprintf("<style>%s</style>", f))
+	}
+}
+
+templ Page(i ...PageInfo) {
+	<html lang="en-US">
+		<head>
+			<meta charset="utf-8"/>
+			// Page information
+			if pageInfo(i).Title != "" {
+				<title>{ pageInfo(i).Title + " - " + configs.APP_NAME }</title>
+			} else {
+				<title>Comicverse</title>
+			}
+			if pageInfo(i).Author != "" {
+				<meta name="author" content={ pageInfo(i).Author }/>
+			} else {
+				<meta name="author" content={ configs.APP_NAME }/>
+			}
+			if pageInfo(i).Description != "" {
+				<meta name="description" content={ pageInfo(i).Description }/>
+			}
+			<meta name="publisher" content={ configs.APP_NAME }/>
+			// Page configuration
+			<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
+			<meta name="referrer" content="strict-origin-when-cross-origin"/>
+			<meta name="color-scheme" content="dark light"/>
+			if pageInfo(i).ThemeColor != "" {
+				<meta name="theme-color" content={ pageInfo(i).ThemeColor }/>
+			}
+			// Global styles
+			<link rel="preload" href="/assets/fonts/KarlaVF.woff2" as="font"/>
+			<link rel="preload" href="/assets/fonts/KarlaItalicVF.woff2" as="font"/>
+			<link rel="preload" href="/assets/fonts/CalSans.woff2" as="font"/>
+			<link rel="preload" href="/assets/fonts/CalSans.ttf" as="font"/>
+			@LinkCSSFile("/assets/css/style.css", assets.ASSETS, "css/style.css")
+			@LinkCSSFile("/assets/css/uno.css", assets.ASSETS, "css/uno.css")
+			// Global scripts
+			if configs.DEVELOPMENT {
+				<script type="module">
+					import htmx from '/assets/lib/htmx.js'; htmx.logAll(); window.htmx = htmx;
+				</script>
+			} else {
+				<script type="module">
+					import htmx from '/assets/lib/htmx.js'; htmx.logNone(); window.htmx = htmx;
+				</script>
+			}
+			// Additional heading
+			if pageInfo(i).Heading != nil {
+				@pageInfo(i).Heading
+			}
+		</head>
+		<body>
+			{ children... }
+		</body>
+	</html>
+}

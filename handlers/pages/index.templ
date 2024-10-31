@@ -1,0 +1,117 @@
+package pages
+
+import (
+	"net/http"
+
+	"forge.capytal.company/capytal/www/assets"
+	"forge.capytal.company/capytal/www/templates/layouts"
+
+	"forge.capytal.company/capytalcode/project-comicverse/lib/router/rerrors"
+)
+
+type IndexPage struct{}
+
+func (p *IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if err := p.Component().Render(r.Context(), w); err != nil {
+		rerrors.InternalError(err).ServeHTTP(w, r)
+	}
+}
+
+templ (p *IndexPage) head() {
+	<link rel="preload" href="/assets/img/cat-1.png" as="image" type="image/png"/>
+	<link rel="preload" href="/assets/img/cat-2.png" as="image" type="image/png"/>
+	<link rel="preload" href="/assets/img/cat-3.png" as="image" type="image/png"/>
+	@layouts.LinkCSSFile("/assets/css/index-page.css", assets.ASSETS, "css/index-page.css")
+}
+
+templ (p *IndexPage) Component() {
+	@layouts.Page(layouts.PageInfo{
+		Heading: p.head(),
+	}) {
+		<main
+			class={ "bg-background-00 absolute w-screen h-screen overflow-x-scroll top-0 left-0",
+			"flex flex-row snap-x snap-mandatory scroll-smooth cursor-move" }
+		>
+			@p.section("main", "brand/light-asset.svg", "/assets/img/cat-1.png", "bg-white", "", "#code") {
+				<ul class="p-0 list-none font-sans flex gap-1rem underline underline-offset-3">
+					<li><a class="text-white" href="/about">About</a></li>
+					<li><a class="text-white" href="/blog">Blog</a></li>
+					<li><a class="text-white" href="/contact">Contact</a></li>
+				</ul>
+			}
+			@p.section("code", "brand/code-light-asset.svg", "/assets/img/cat-3.png", "bg-cyan", "#main", "#creators") {
+				<ul class="p-0 list-none font-sans flex gap-1rem underline underline-offset-3">
+					<li><a class="text-white" href="/about">About</a></li>
+					<li><a class="text-white" href="/blog">Projects</a></li>
+					<li><a class="text-white" href="/contact">Contact</a></li>
+				</ul>
+			}
+			@p.section("creators", "brand/creators-light-asset.svg", "/assets/img/cat-2.png", "bg-purple", "#code", "") {
+				<ul class="p-0 list-none font-sans flex gap-1rem underline underline-offset-3">
+					<li><a class="text-white" href="/about">About</a></li>
+					<li><a class="text-white" href="/creators">Creators</a></li>
+					<li><a class="text-white" href="/contact">Contact</a></li>
+				</ul>
+			}
+		</main>
+	}
+}
+
+templ (p *IndexPage) section(id, logo, img, color string, linkLeft, linkRight string) {
+	<section
+		id={ id }
+		class="min-w-screen h-screen flex flex-col justify-center items-center snap-center relative"
+	>
+		if linkLeft != "" {
+			<a
+				class={ "w-2rem md:w-10rem h-screen top-0 left-0 absolute flex justify-center items-center z-5",
+				"font-display color-#fff/50 no-underline" }
+				href={ templ.SafeURL(linkLeft) }
+			>
+				&lt;
+			</a>
+		}
+		<div
+			class="w-full h-10rem md:h-25rem relative grid cols-3 rows-1"
+		>
+			<div
+				class="w-10rem h-10rem md:w-25rem md:h-25rem col-start-2 justify-self-center relative"
+			>
+				@p.blendedImage(img, color)
+			</div>
+			<div
+				class="absolute left-o top-0 w-full h-full flex justify-center items-center z-3"
+				id="logo"
+			>
+				<div class="h-2.2rem md:h-4rem">
+					if svg, err := assets.ASSETS.ReadFile(logo); err != nil {
+						Error while loading SVG file { err.Error() }
+					} else {
+						@templ.Raw(string(svg))
+					}
+				</div>
+			</div>
+		</div>
+		<div class="h-0">
+			{ children... }
+		</div>
+		if linkRight != "" {
+			<a
+				class={ "w-2rem md:w-10rem h-screen top-0 right-0 absolute flex justify-center items-center z-5",
+				"font-display color-#fff/50 no-underline" }
+				href={ templ.SafeURL(linkRight) }
+			>
+				&gt;
+			</a>
+		}
+	</section>
+}
+
+templ (p *IndexPage) blendedImage(img, color string) {
+	<div class={ "w-full h-full absolute top-0 left-0 z-2 mix-blend-multiply", color }></div>
+	<img
+		class="w-full h-full absolute top-o left-0 z-1"
+		id="logo-image"
+		src={ img }
+	/>
+}

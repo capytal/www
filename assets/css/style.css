@@ -1,0 +1,36 @@
+@font-face {
+	font-family: "Cal Sans";
+	font-style: normal;
+	src: url("/assets/fonts/CalSans.woff2") format("woff2"),
+		url("/assets/fonts/CalSans.woff") format("woff"),
+		url("/assets/fonts/CalSans.ttf") format("truetype"),
+}
+@font-face {
+	font-family: "Karla";
+	font-style: normal;
+	src: url("/assets/fonts/KarlaVF.woff2") format("woff2"),
+		url("/assets/fonts/KarlaVF.ttf") format("truetype"),
+		url("/assets/fonts/KarlaMedium.otf") format("opentype");
+}
+@font-face {
+	font-family: "Karla";
+	font-style: italic;
+	src: url("/assets/fonts/KarlaItalicVF.woff2") format("woff2"),
+		url("/assets/fonts/KarlaItalicVF.ttf") format("truetype"),
+		url("/assets/fonts/KarlaItalicMedium.otf") format("opentype");
+}
+
+:root * {
+	--black: #000000;
+	--white: #ffffff;
+
+	--cyan: #00ffff;
+	--purple: #ff00ff;
+
+	--background-00: var(--black);
+	--foreground-00: var(--white);
+	--accent-00: var(--white);
+
+	--cal-sans: "Cal Sans", 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	--sans: "Karla", 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
