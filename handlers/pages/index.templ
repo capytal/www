@@ -30,7 +30,7 @@ templ (p *IndexPage) Component() {
 	}) {
 		<main
 			class={ "bg-background-00 absolute w-screen h-screen overflow-x-scroll top-0 left-0",
-			"flex flex-row snap-x snap-mandatory scroll-smooth cursor-move" }
+					"flex flex-row snap-x snap-mandatory scroll-smooth cursor-move" }
 		>
 			@p.section("main", "brand/light-asset.svg", "/assets/img/cat-1.png", "bg-white", "", "#code") {
 				<ul class="p-0 list-none font-sans flex gap-1rem underline underline-offset-3">
@@ -72,15 +72,17 @@ templ (p *IndexPage) section(id, logo, img, color string, linkLeft, linkRight st
 			</a>
 		}
 		<div
-			class="w-full h-10rem md:h-25rem relative grid cols-3 rows-1"
+			class="w-full h-10rem md:h-25rem relative grid cols-3 rows-1 slide-enter"
 		>
 			<div
-				class="w-10rem h-10rem md:w-25rem md:h-25rem col-start-2 justify-self-center relative"
+				class="w-10rem h-10rem md:w-25rem md:h-25rem col-start-2 justify-self-center relative slide-enter"
+				style="--stagger:2;"
 			>
 				@p.blendedImage(img, color)
 			</div>
 			<div
 				class="absolute left-o top-0 w-full h-full flex justify-center items-center z-3"
+				style="--stagger:0;"
 				id="logo"
 			>
 				<div class="h-2.2rem md:h-4rem">
@@ -92,7 +94,10 @@ templ (p *IndexPage) section(id, logo, img, color string, linkLeft, linkRight st
 				</div>
 			</div>
 		</div>
-		<div class="h-0">
+		<div
+			class="h-0 slide-enter"
+			style="--stagger:3;"
+		>
 			{ children... }
 		</div>
 		if linkRight != "" {
