@@ -3,3 +3,4 @@ node_modules
 uno.css
 *_templ.go
 *_templ.txt
+.dist
