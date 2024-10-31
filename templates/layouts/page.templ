@@ -44,7 +44,7 @@ templ Page(i ...PageInfo) {
 			if pageInfo(i).Title != "" {
 				<title>{ pageInfo(i).Title + " - " + configs.APP_NAME }</title>
 			} else {
-				<title>Comicverse</title>
+				<title>{ configs.APP_NAME }</title>
 			}
 			if pageInfo(i).Author != "" {
 				<meta name="author" content={ pageInfo(i).Author }/>
