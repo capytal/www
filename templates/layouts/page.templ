@@ -71,12 +71,24 @@ templ Page(i ...PageInfo) {
 			@LinkCSSFile("/assets/css/uno.css", assets.ASSETS, "css/uno.css")
 			// Global scripts
 			if configs.DEVELOPMENT {
-				<script type="module">
-					import htmx from '/assets/lib/htmx.js'; htmx.logAll(); window.htmx = htmx;
+				<script type="module" hx-preserve="true">
+					import htmxHeadSupport from '/assets/lib/htmx-head-support.js';
+					import htmx from '/assets/lib/htmx.js';
+
+					htmxHeadSupport(htmx)
+
+					htmx.logAll();
+					window.htmx = htmx;
 				</script>
 			} else {
-				<script type="module">
-					import htmx from '/assets/lib/htmx.js'; htmx.logNone(); window.htmx = htmx;
+				<script type="module" hx-preserve="true">
+					import htmxHeadSupport from '/assets/lib/htmx-head-support.js';
+					import htmx from '/assets/lib/htmx.js';
+
+					htmxHeadSupport(htmx)
+
+					htmx.logNone();
+					window.htmx = htmx;
 				</script>
 			}
 			// Additional heading
@@ -84,7 +96,12 @@ templ Page(i ...PageInfo) {
 				@pageInfo(i).Heading
 			}
 		</head>
-		<body>
+		<body
+			class="font-sans bg-background-00"
+			hx-boost="true"
+			hx-ext="head-support"
+			hx-push-url="true"
+		>
 			{ children... }
 		</body>
 	</html>
