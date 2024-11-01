@@ -39,7 +39,7 @@ templ LinkCSSFile(href string, fs embed.FS, file string) {
 templ Page(i ...PageInfo) {
 	<html lang="en-US">
 		<head>
-			<meta charset="utf-8"/>
+			<meta charset="utf-8" hx-preserve="true"/>
 			// Page information
 			if pageInfo(i).Title != "" {
 				<title>{ pageInfo(i).Title + " - " + configs.APP_NAME }</title>
@@ -56,17 +56,17 @@ templ Page(i ...PageInfo) {
 			}
 			<meta name="publisher" content={ configs.APP_NAME }/>
 			// Page configuration
-			<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
-			<meta name="referrer" content="strict-origin-when-cross-origin"/>
-			<meta name="color-scheme" content="dark light"/>
+			<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" hx-preserve="true"/>
+			<meta name="referrer" content="strict-origin-when-cross-origin" hx-preserve="true"/>
+			<meta name="color-scheme" content="dark light" hx-preserve="true"/>
 			if pageInfo(i).ThemeColor != "" {
 				<meta name="theme-color" content={ pageInfo(i).ThemeColor }/>
 			}
 			// Global styles
-			<link rel="preload" href="/assets/fonts/KarlaVF.woff2" as="font"/>
-			<link rel="preload" href="/assets/fonts/KarlaItalicVF.woff2" as="font"/>
-			<link rel="preload" href="/assets/fonts/CalSans.woff2" as="font"/>
-			<link rel="preload" href="/assets/fonts/CalSans.ttf" as="font"/>
+			<link rel="preload" href="/assets/fonts/KarlaVF.woff2" as="font" hx-preserve="true"/>
+			<link rel="preload" href="/assets/fonts/KarlaItalicVF.woff2" as="font" hx-preserve="true"/>
+			<link rel="preload" href="/assets/fonts/CalSans.woff2" as="font" hx-preserve="true"/>
+			<link rel="preload" href="/assets/fonts/CalSans.ttf" as="font" hx-preserve="true"/>
 			@LinkCSSFile("/assets/css/style.css", assets.ASSETS, "css/style.css")
 			@LinkCSSFile("/assets/css/uno.css", assets.ASSETS, "css/uno.css")
 			// Global scripts
