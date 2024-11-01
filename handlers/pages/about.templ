@@ -16,8 +16,22 @@ func (p *AboutPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+templ (p *AboutPage) head() {
+	<link rel="modulepreload" href="/assets/lib/about-page.js" as="script" type="text/javascript"/>
+	<script defer hx-head="re-eval">
+		(async () => {
+			console.debug("RELOADED")
+			async function event() {
+				const { main } = await import("/assets/lib/about-page.js");
+				main()
+			}
+			document.addEventListener("htmx:load", event, { once: true })
+		})()
+	</script>
+}
+
 templ (p *AboutPage) Component() {
-	@layouts.Page(layouts.PageInfo{Title: "About"}) {
+	@layouts.Page(layouts.PageInfo{Title: "About", Heading: p.head()}) {
 		<main
 			class={ "w-screen h-screen bg-background-00 absolute top-0 left-0",
 					"flex justify-center items-center flex-col slide-enter" }
@@ -72,12 +86,22 @@ templ (p *AboutPage) Component() {
 							"bg-gradient-to-t from-background-00 to-transparent pointer-events-none" }
 				></span>
 			</section>
-			<a
-				href="/"
-				class="font-display text-white no-underline w-5rem h-5rem text-center leading-[5rem]"
-			>
-				&lt;
-			</a>
+			@p.returnAnchor("return-anchor-root", "/", true)
+			@p.returnAnchor("return-anchor-code", "/#code", false)
+			@p.returnAnchor("return-anchor-creators", "/#creators", false)
 		</main>
 	}
+}
+
+templ (p *AboutPage) returnAnchor(id string, href string, enabled bool) {
+	<a
+		href={ templ.SafeURL(href) }
+		id={ id }
+		class={ "font-display text-white no-underline w-5rem h-5rem text-center leading-[5rem]",
+				templ.KV("hidden", !enabled) }
+		aria-hidden?={ !enabled }
+		aria-disabled?={ !enabled }
+	>
+		&lt;
+	</a>
 }
