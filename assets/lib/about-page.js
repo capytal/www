@@ -29,21 +29,15 @@ function toggleElement(e, toggle) {
  * Hello world.
  */
 export function main() {
-	console.debug('RUNNING');
-
 	const anchors = {
 		code: document.querySelector('#return-anchor-code'),
 		creators: document.querySelector('#return-anchor-creators'),
 		root: document.querySelector('#return-anchor-root'),
 	};
 
-	console.debug('AAAAA', anchors);
-
 	if (!anchors.code || !anchors.creators || !anchors.root) {
 		return;
 	}
-
-	console.debug('AAAAA');
 
 	/** @type {URL | undefined} */
 	let url = undefined;
@@ -54,8 +48,6 @@ export function main() {
 		console.error(`Failed to get document url. Error: ${String(error)}`);
 		url = new URL('/');
 	}
-
-	console.debug('hash', url.hash);
 
 	switch (url.hash) {
 		case '#code':
