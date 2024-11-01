@@ -37,7 +37,7 @@ dev/sync_assets:
 		--build.bin "true" \
 		--build.delay "100" \
 		--build.exclude_dir "" \
-		--build.include_dir "static" \
+		--build.include_dir "assets" \
 		--build.include_ext "js,css"
 
 dev/assets/css:
