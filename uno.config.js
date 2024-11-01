@@ -15,7 +15,7 @@ export default defineConfig({
 			patterns: [
 				'./{templates,handlers}/**/*.templ',
 				'./assets/**/*.{js,css,html}',
-				'!./assets/uno.css',
+				'!./assets/css/uno.css',
 			],
 		},
 	},
