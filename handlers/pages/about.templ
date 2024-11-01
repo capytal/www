@@ -22,21 +22,55 @@ templ (p *AboutPage) Component() {
 			class={ "w-screen h-screen bg-background-00 absolute top-0 left-0",
 					"flex justify-center items-center flex-col slide-enter" }
 		>
-			<section class="w-10rem h-10rem md:w-25rem md:h-25rem text-justify">
-				<h1>About</h1>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget mi metus.
-					In hac habitasse platea dictumst. Integer lacinia ornare pellentesque. Nulla facilisis
-					sodales justo non elementum. Aliquam sit amet accumsan nulla. Fusce egestas viverra
-					items-centertincidunt. Sed sem dolor, suscipit sed elit id, consequat egestas tellus.
-					Quisque a tortor velit.
-				</p>
-				<p>
-					Cras sed libero eu velit euismod sagittis. Nunc ante risus, cursus vel leo eget,
-					porta iaculis eros. Aliquam sodales dui non augue sodales, sit amet vulputate nisi interdum.
-					Mauris convallis velit vitae maximus imperdiet. Suspendisse vulputate ornare semper.
-					Cras et venenatis ligula. Nulla nec libero eget neque feugiat cursus.
-				</p>
+			<section class="w-20rem h-20rem md:w-25rem md:h-25rem text-justify relative">
+				<div class="overflow-y-scroll w-full h-full">
+					<h1>About</h1>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget mi metus.
+						In hac habitasse platea dictumst. Integer lacinia ornare pellentesque. Nulla facilisis
+						sodales justo non elementum. Aliquam sit amet accumsan nulla. Fusce egestas viverra
+						items-centertincidunt. Sed sem dolor, suscipit sed elit id, consequat egestas tellus.
+						Quisque a tortor velit.
+					</p>
+					<p>
+						Cras sed libero eu velit euismod sagittis. Nunc ante risus, cursus vel leo eget,
+						porta iaculis eros. Aliquam sodales dui non augue sodales, sit amet vulputate nisi interdum.
+						Mauris convallis velit vitae maximus imperdiet. Suspendisse vulputate ornare semper.
+						Cras et venenatis ligula. Nulla nec libero eget neque feugiat cursus.
+					</p>
+					<h2 id="code">About Code</h2>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget mi metus.
+						In hac habitasse platea dictumst. Integer lacinia ornare pellentesque. Nulla facilisis
+						sodales justo non elementum. Aliquam sit amet accumsan nulla. Fusce egestas viverra
+						items-centertincidunt. Sed sem dolor, suscipit sed elit id, consequat egestas tellus.
+						Quisque a tortor velit.
+					</p>
+					<p>
+						Cras sed libero eu velit euismod sagittis. Nunc ante risus, cursus vel leo eget,
+						porta iaculis eros. Aliquam sodales dui non augue sodales, sit amet vulputate nisi interdum.
+						Mauris convallis velit vitae maximus imperdiet. Suspendisse vulputate ornare semper.
+						Cras et venenatis ligula. Nulla nec libero eget neque feugiat cursus.
+					</p>
+					<h2 id="creators">About Creators</h2>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget mi metus.
+						In hac habitasse platea dictumst. Integer lacinia ornare pellentesque. Nulla facilisis
+						sodales justo non elementum. Aliquam sit amet accumsan nulla. Fusce egestas viverra
+						items-centertincidunt. Sed sem dolor, suscipit sed elit id, consequat egestas tellus.
+						Quisque a tortor velit.
+					</p>
+					<p>
+						Cras sed libero eu velit euismod sagittis. Nunc ante risus, cursus vel leo eget,
+						porta iaculis eros. Aliquam sodales dui non augue sodales, sit amet vulputate nisi interdum.
+						Mauris convallis velit vitae maximus imperdiet. Suspendisse vulputate ornare semper.
+						Cras et venenatis ligula. Nulla nec libero eget neque feugiat cursus.
+					</p>
+				</div>
+				<span
+					class={ "absolute block bottom-0 left-0 w-full h-10rem z-2",
+							"bg-gradient-to-t from-background-00 to-transparent pointer-events-none" }
+				></span>
 			</section>
 			<a
 				href="/"
