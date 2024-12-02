@@ -26,7 +26,7 @@ function toggleElement(e, toggle) {
 }
 
 /**
- * Hello world.
+ * Main function to run on the about.templ page.
  */
 export function main() {
 	const anchors = {
