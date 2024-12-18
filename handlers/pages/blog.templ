@@ -12,12 +12,18 @@ import (
 
 	"forge.capytal.company/loreddev/x/groute/router/rerrors"
 	"forge.capytal.company/loreddev/x/groute/router"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark-meta"
 )
 
 type Blog struct {
 	repo     string
 	owner    string
 	endpoint string
+
+	md goldmark.Markdown
 }
 
 func NewBlog(owner, repo, endpoint string) *Blog {
@@ -25,7 +31,13 @@ func NewBlog(owner, repo, endpoint string) *Blog {
 	if err != nil {
 		panic(fmt.Sprintf("Blog Forgejo endpoint is not a valid URL: %v", err))
 	}
-	return &Blog{repo: repo, owner: owner, endpoint: u.String()}
+
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM, meta.Meta),
+		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
+	)
+
+	return &Blog{repo: repo, owner: owner, endpoint: u.String(), md: md}
 }
 
 func (p *Blog) Routes() router.Router {
@@ -81,7 +93,18 @@ func (p *Blog) blogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write(body)
+	var buf bytes.Buffer
+	err := p.md.Convert(body, &buf)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to render markdown"), err).ServeHTTP(w, r)
+		return
+	}
+
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to write response"), err).ServeHTTP(w, r)
+		return
+	}
 }
 
 func (p *Blog) get(endpoint string) (http.Header, []byte, *rerrors.RouteError) {
