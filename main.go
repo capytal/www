@@ -14,8 +14,9 @@ import (
 
 	"forge.capytal.company/capytal/www/configs"
 	"forge.capytal.company/capytal/www/handlers/pages"
-	"forge.capytal.company/capytalcode/project-comicverse/lib/middleware"
-	"forge.capytal.company/capytalcode/project-comicverse/lib/router"
+
+	"forge.capytal.company/loreddev/x/groute/middleware"
+	"forge.capytal.company/loreddev/x/groute/router"
 )
 
 var (

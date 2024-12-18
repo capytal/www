@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"path"
-	"forge.capytal.company/capytalcode/project-comicverse/lib/router/rerrors"
+
+	"forge.capytal.company/loreddev/x/groute/router/rerrors"
 )
 
 func NewGiteaBlog(owner, repo, endpoint string) *GiteaBlog {

@@ -3,8 +3,8 @@ package pages
 import (
 	"log/slog"
 
-	"forge.capytal.company/capytalcode/project-comicverse/lib/router"
-	"forge.capytal.company/capytalcode/project-comicverse/lib/router/rerrors"
+	"forge.capytal.company/loreddev/x/groute/router"
+	"forge.capytal.company/loreddev/x/groute/router/rerrors"
 )
 
 func Routes(log *slog.Logger) router.Router {
