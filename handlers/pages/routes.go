@@ -12,7 +12,7 @@ import (
 func Routes(log *slog.Logger) router.Router {
 	r := router.NewRouter()
 
-	r.Use(rerrors.NewErrorMiddleware(ErrorPage{}.Component, log).Wrap)
+	r.Use(rerrors.NewErrorMiddleware(ErrorPage{}.Component, log))
 
 	r.Handle("/", &IndexPage{})
 	r.Handle("/about", &AboutPage{})
