@@ -11,6 +11,7 @@ import (
 	"forge.capytal.company/capytal/www/templates/layouts"
 
 	"forge.capytal.company/loreddev/x/groute/router/rerrors"
+	"forge.capytal.company/loreddev/x/groute/router"
 )
 
 type Blog struct {
@@ -27,8 +28,8 @@ func NewBlog(owner, repo, endpoint string) *Blog {
 	return &Blog{repo: repo, owner: owner, endpoint: u.String()}
 }
 
-func (p *Blog) Routes() http.Handler {
-	r := http.NewServeMux()
+func (p *Blog) Routes() router.Router {
+	r := router.NewRouter()
 
 	r.HandleFunc("/{entry...}", func(w http.ResponseWriter, r *http.Request) {
 		pv := r.PathValue("entry")
