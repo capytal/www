@@ -19,7 +19,7 @@ type Blog struct {
 	endpoint string
 }
 
-func NewBlog(repo, owner, endpoint string) *Blog {
+func NewBlog(owner, repo, endpoint string) *Blog {
 	u, err := url.Parse(endpoint)
 	if err != nil {
 		panic(fmt.Sprintf("Blog Forgejo endpoint is not a valid URL: %v", err))
