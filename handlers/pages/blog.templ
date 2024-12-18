@@ -1,0 +1,122 @@
+package pages
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"path"
+
+	"forge.capytal.company/capytal/www/templates/layouts"
+
+	"forge.capytal.company/loreddev/x/groute/router/rerrors"
+)
+
+type Blog struct {
+	repo     string
+	owner    string
+	endpoint string
+}
+
+func NewBlog(owner, repo, endpoint string) *Blog {
+	u, err := url.Parse(endpoint)
+	if err != nil {
+		panic(fmt.Sprintf("Blog Forgejo endpoint is not a valid URL: %v", err))
+	}
+	return &Blog{repo: repo, owner: owner, endpoint: u.String()}
+}
+
+func (p *Blog) Routes() http.Handler {
+	r := http.NewServeMux()
+
+	r.HandleFunc("/{entry...}", func(w http.ResponseWriter, r *http.Request) {
+		pv := r.PathValue("entry")
+		if pv == "" {
+			p.listPosts(w, r)
+		} else {
+			p.blogEntry(w, r)
+		}
+	})
+
+	return r
+}
+
+func (p *Blog) listPosts(w http.ResponseWriter, r *http.Request) {
+	_, body, rerr := p.get(fmt.Sprintf("/repos/%s/%s/contents/daily-blogs", p.owner, p.repo))
+	if rerr != nil {
+		rerr.ServeHTTP(w, r)
+		return
+	}
+
+	var list []forgejoFile
+
+	err := json.Unmarshal(body, &list)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to parse list of entries"), err).ServeHTTP(w, r)
+		return
+	}
+
+	err = p.blogEntryList(list).Render(r.Context(), w)
+	if err != nil {
+		rerrors.InternalError(err).ServeHTTP(w, r)
+	}
+}
+
+templ (p *Blog) blogEntryList(entries []forgejoFile) {
+	@layouts.Page() {
+		<ul>
+			for _, e := range entries {
+				<li><a href={ templ.SafeURL(path.Join(".", e.Path)) }>{ e.Name }</a></li>
+			}
+		</ul>
+	}
+}
+
+func (p *Blog) blogEntry(w http.ResponseWriter, r *http.Request) {
+	_, body, rerr := p.get(fmt.Sprintf("/repos/%s/%s/raw/%s", p.owner, p.repo, r.PathValue("entry")))
+	if rerr != nil {
+		rerr.ServeHTTP(w, r)
+		return
+	}
+
+	w.Write(body)
+}
+
+func (p *Blog) get(endpoint string) (http.Header, []byte, *rerrors.RouteError) {
+	u, _ := url.Parse(p.endpoint)
+	u.Path = path.Join(u.Path, endpoint)
+
+	r, err := http.Get(u.String())
+	if err != nil {
+		e := rerrors.InternalError(
+			fmt.Errorf("failed to make request to endpoint %s", u.String()),
+			err,
+		)
+		return nil, nil, &e
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		e := rerrors.InternalError(
+			fmt.Errorf("failed to read response body of request to endpoint %s", u.String()),
+			err,
+		)
+		return nil, nil, &e
+	} else if r.StatusCode != http.StatusOK {
+		e := rerrors.InternalError(
+			fmt.Errorf("request to endpoint %s returned non-200 code %q.\n%s", u.String(), r.Status, string(body)),
+		)
+		return nil, nil, &e
+	}
+
+	return r.Header, body, nil
+}
+
+type forgejoFile struct {
+	Name          string `json:"name"`
+	Path          string `json:"path"`
+	Sha           string `json:"sha"`
+	LastCommitSha string `json:"last_commit_sha"`
+	Type          string `json:"type"`
+}
