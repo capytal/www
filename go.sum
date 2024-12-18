@@ -1,6 +1,10 @@
 forge.capytal.company/capytalcode/project-comicverse v0.0.0-20241024232831-478dd0216e72 h1:HpAsKmgSWME9bfpvicXlZF/+ZZW92w6DXoscsqNB1j8=
 forge.capytal.company/capytalcode/project-comicverse v0.0.0-20241024232831-478dd0216e72/go.mod h1:COqB9i9nyQrQUz/ZqMvN98V7rh0t7vdXmBV36G8Q+7Q=
+forge.capytal.company/capytalcode/project-comicverse v0.0.0-20241213195940-67230ba75d8a h1:PDmA2uCzFdn+CdS3C+Pg1YGhJERgMjwgCjUEUaIDZTM=
+forge.capytal.company/capytalcode/project-comicverse v0.0.0-20241213195940-67230ba75d8a/go.mod h1:COqB9i9nyQrQUz/ZqMvN98V7rh0t7vdXmBV36G8Q+7Q=
 github.com/a-h/templ v0.2.778 h1:VzhOuvWECrwOec4790lcLlZpP4Iptt5Q4K9aFxQmtaM=
 github.com/a-h/templ v0.2.778/go.mod h1:lq48JXoUvuQrU0VThrK31yFwdRjTCnIE5bcPCM9IP1w=
+github.com/a-h/templ v0.2.793 h1:Io+/ocnfGWYO4VHdR0zBbf39PQlnzVCVVD+wEEs6/qY=
+github.com/a-h/templ v0.2.793/go.mod h1:lq48JXoUvuQrU0VThrK31yFwdRjTCnIE5bcPCM9IP1w=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
