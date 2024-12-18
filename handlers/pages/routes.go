@@ -2,9 +2,7 @@ package pages
 
 import (
 	"log/slog"
-	"net/http"
 
-	"forge.capytal.company/capytal/www/libs/blog"
 	"forge.capytal.company/capytalcode/project-comicverse/lib/router"
 	"forge.capytal.company/capytalcode/project-comicverse/lib/router/rerrors"
 )
