@@ -21,15 +21,17 @@ import (
 	"github.com/yuin/goldmark-meta"
 )
 
-type EntryTemplate func(html []byte) templ.Component
+type EntryTemplate func([]byte) templ.Component
+type EntryListTemplate func(map[string]entry) templ.Component
 
 type Blog struct {
 	repo     string
 	owner    string
 	endpoint string
 
-	md            goldmark.Markdown
-	entryTemplate EntryTemplate
+	md                goldmark.Markdown
+	entryTemplate     EntryTemplate
+	entryListTemplate EntryListTemplate
 
 	entries map[string]entry
 }
@@ -69,7 +71,8 @@ func NewBlog(owner, repo, endpoint string, opts ...BlogOptions) (*Blog, error) {
 		endpoint: u.String(),
 		md:       md,
 		// entryTemplate: opt.EntryTemplate,
-		entryTemplate: template,
+		entryTemplate:     template,
+		entryListTemplate: templateList,
 
 		entries: map[string]entry{},
 	}
@@ -161,19 +164,9 @@ func (p *Blog) init() error {
 }
 
 func (p *Blog) listPosts(w http.ResponseWriter, r *http.Request) {
-	err := p.blogEntryList(p.entries).Render(r.Context(), w)
+	err := p.entryListTemplate(p.entries).Render(r.Context(), w)
 	if err != nil {
 		rerrors.InternalError(err).ServeHTTP(w, r)
-	}
-}
-
-templ (p *Blog) blogEntryList(entries map[string]entry) {
-	@layouts.Page() {
-		<ul>
-			for _, e := range entries {
-				<li><a href={ templ.SafeURL(path.Join(".", e.path)) }>{ e.title }</a></li>
-			}
-		</ul>
 	}
 }
 
@@ -234,6 +227,24 @@ templ template(html []byte) {
 		<div class="w-100% py-10rem flex justify-center">
 			<main class="w-60vw">
 				@templ.Raw(string(html))
+			</main>
+		</div>
+	}
+}
+
+templ templateList(entries map[string]entry) {
+	@layouts.Page() {
+		<div class="w-60%">
+			<main class="py-10rem">
+				<h1>Blog</h1>
+				<ul class="list-none">
+					for _, e := range entries {
+						<li>
+							<h2><a href={ templ.SafeURL(path.Join(".", e.path)) }>{ e.title }</a></h2>
+							<p>{ e.summary }</p>
+						</li>
+					}
+				</ul>
 			</main>
 		</div>
 	}
