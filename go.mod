@@ -7,7 +7,7 @@ require forge.capytal.company/loreddev/x v0.0.0
 replace forge.capytal.company/loreddev/x => ./x
 
 require (
-	github.com/a-h/templ v0.2.793
+	github.com/a-h/templ v0.3.819
 	github.com/yuin/goldmark v1.7.8
 	github.com/yuin/goldmark-meta v1.1.0
 )
