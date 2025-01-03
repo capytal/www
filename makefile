@@ -1,4 +1,5 @@
 PORT?=8080
+TEMPL_VERSION=v0.3.819
 
 lint: build/templ
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.59.1 run
@@ -10,13 +11,13 @@ lint/fix: build/templ
 
 fmt: build/templ
 	go fmt ./.
-	go run github.com/a-h/templ/cmd/templ@v0.2.707 fmt .
+	go run github.com/a-h/templ/cmd/templ@$(TEMPL_VERSION) fmt .
 	go run mvdan.cc/gofumpt@v0.7.0 -l -w .
 	go run github.com/segmentio/golines@v0.12.2 -w .
 	go run golang.org/x/tools/cmd/goimports@v0.26.0 -w -l .
 
 dev/templ:
-	go run github.com/a-h/templ/cmd/templ@v0.2.707 generate --watch \
+	go run github.com/a-h/templ/cmd/templ@$(TEMPL_VERSION) generate --watch \
 		--proxy=http://localhost:$(PORT) \
 		--proxybind="0.0.0.0" \
 		--open-browser=false
@@ -33,7 +34,7 @@ dev/server:
 
 dev/sync_assets:
 	go run github.com/air-verse/air@v1.52.2 \
-		--build.cmd "go run github.com/a-h/templ/cmd/templ@v0.2.707 generate --notify-proxy" \
+		--build.cmd "go run github.com/a-h/templ/cmd/templ@$(TEMPL_VERSION) generate --notify-proxy" \
 		--build.bin "true" \
 		--build.delay "100" \
 		--build.exclude_dir "" \
@@ -48,7 +49,7 @@ dev:
 		make -j4 dev/templ dev/server dev/sync_assets dev/assets/css
 
 build/templ:
-	go run github.com/a-h/templ/cmd/templ@v0.2.707 generate
+	go run github.com/a-h/templ/cmd/templ@$(TEMPL_VERSION) generate
 
 build/app:
 	go build -o ./.dist/app .

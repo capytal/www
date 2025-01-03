@@ -2,7 +2,7 @@
   description = "My development environment";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    templ.url = "github:a-h/templ?ref=v0.2.778";
+    templ.url = "github:a-h/templ?ref=v0.3.819";
   };
   outputs = {
     self,
@@ -50,6 +50,7 @@
           gotools
           delve
           (templ system)
+          gopls
 
           # Sqlite tools
           sqlite

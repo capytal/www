@@ -1,6 +1,8 @@
 package pages
 
 import (
+	"bytes"
+	"io"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,24 +13,58 @@ import (
 	"forge.capytal.company/capytal/www/templates/layouts"
 
 	"forge.capytal.company/loreddev/x/groute/router/rerrors"
+	"forge.capytal.company/loreddev/x/groute/router"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark-meta"
 )
+
+type EntryTemplate func(html []byte) templ.Component
 
 type Blog struct {
 	repo     string
 	owner    string
 	endpoint string
+
+	md            goldmark.Markdown
+	entryTemplate EntryTemplate
 }
 
-func NewBlog(owner, repo, endpoint string) *Blog {
+type BlogOptions struct {
+	EntryTemplate EntryTemplate
+}
+
+func NewBlog(owner, repo, endpoint string, opts ...BlogOptions) *Blog {
+	/*
+		opt := BlogOptions{}
+		if len(opts) > 0 {
+			opt = opts[0]
+		}
+	*/
+
 	u, err := url.Parse(endpoint)
 	if err != nil {
 		panic(fmt.Sprintf("Blog Forgejo endpoint is not a valid URL: %v", err))
 	}
-	return &Blog{repo: repo, owner: owner, endpoint: u.String()}
+
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM, meta.Meta),
+		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
+	)
+
+	return &Blog{
+		repo:     repo,
+		owner:    owner,
+		endpoint: u.String(),
+		md:       md,
+		// entryTemplate: opt.EntryTemplate,
+		entryTemplate: template,
+	}
 }
 
-func (p *Blog) Routes() http.Handler {
-	r := http.NewServeMux()
+func (p *Blog) Routes() router.Router {
+	r := router.NewRouter()
 
 	r.HandleFunc("/{entry...}", func(w http.ResponseWriter, r *http.Request) {
 		pv := r.PathValue("entry")
@@ -80,7 +116,24 @@ func (p *Blog) blogEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write(body)
+	buf := bytes.NewBuffer([]byte(""))
+	err := p.md.Convert(body, buf)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to render markdown"), err).ServeHTTP(w, r)
+		return
+	}
+
+	html, err := io.ReadAll(buf)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to read markdown html")).ServeHTTP(w, r)
+		return
+	}
+
+	err = p.entryTemplate(html).Render(r.Context(), w)
+	if err != nil {
+		rerrors.InternalError(errors.New("failed to write response"), err).ServeHTTP(w, r)
+		return
+	}
 }
 
 func (p *Blog) get(endpoint string) (http.Header, []byte, *rerrors.RouteError) {
@@ -119,4 +172,14 @@ type forgejoFile struct {
 	Sha           string `json:"sha"`
 	LastCommitSha string `json:"last_commit_sha"`
 	Type          string `json:"type"`
+}
+
+templ template(html []byte) {
+	@layouts.Page() {
+		<div class="w-100% py-10rem flex justify-center">
+			<main class="w-60vw">
+				@templ.Raw(string(html))
+			</main>
+		</div>
+	}
 }
