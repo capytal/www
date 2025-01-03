@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"log"
 
 	"forge.capytal.company/capytal/www/templates/layouts"
 
@@ -29,13 +30,22 @@ type Blog struct {
 
 	md            goldmark.Markdown
 	entryTemplate EntryTemplate
+
+	entries map[string]entry
+}
+
+type entry struct {
+	title    string
+	path     string
+	summary  string
+	contents templ.Component
 }
 
 type BlogOptions struct {
 	EntryTemplate EntryTemplate
 }
 
-func NewBlog(owner, repo, endpoint string, opts ...BlogOptions) *Blog {
+func NewBlog(owner, repo, endpoint string, opts ...BlogOptions) (*Blog, error) {
 	/*
 		opt := BlogOptions{}
 		if len(opts) > 0 {
@@ -53,14 +63,22 @@ func NewBlog(owner, repo, endpoint string, opts ...BlogOptions) *Blog {
 		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
 	)
 
-	return &Blog{
+	blog := &Blog{
 		repo:     repo,
 		owner:    owner,
 		endpoint: u.String(),
 		md:       md,
 		// entryTemplate: opt.EntryTemplate,
 		entryTemplate: template,
+
+		entries: map[string]entry{},
 	}
+
+	if err := blog.init(); err != nil {
+		return nil, err
+	}
+
+	return blog, nil
 }
 
 func (p *Blog) Routes() router.Router {
@@ -78,58 +96,95 @@ func (p *Blog) Routes() router.Router {
 	return r
 }
 
-func (p *Blog) listPosts(w http.ResponseWriter, r *http.Request) {
+func (p *Blog) init() error {
 	_, body, rerr := p.get(fmt.Sprintf("/repos/%s/%s/contents/daily-blogs", p.owner, p.repo))
 	if rerr != nil {
-		rerr.ServeHTTP(w, r)
-		return
+		return rerr
 	}
+
+	log.Printf("Getting files from repository")
 
 	var list []forgejoFile
-
 	err := json.Unmarshal(body, &list)
 	if err != nil {
-		rerrors.InternalError(errors.New("failed to parse list of entries"), err).ServeHTTP(w, r)
-		return
+		return errors.Join(errors.New("failed to parse list of entries"), err)
 	}
 
-	err = p.blogEntryList(list).Render(r.Context(), w)
+	entries := make(map[string]entry, len(list))
+	for _, e := range list {
+		log.Printf("Getting entry %s", e.Path)
+
+		_, body, rerr := p.get(fmt.Sprintf("/repos/%s/%s/raw/%s", p.owner, p.repo, e.Path))
+		if rerr != nil {
+			return rerr
+		}
+
+		var buf bytes.Buffer
+
+		ctx := parser.NewContext()
+
+		err := p.md.Convert(body, &buf, parser.WithContext(ctx))
+		if err != nil {
+			return err
+		}
+
+		meta := meta.Get(ctx)
+
+		var title string
+		if t, ok := meta["title"]; ok {
+			title, ok = t.(string)
+			if !ok {
+				title = "failed to concat string" // aka Yaml "yes" as bool being fucking annoying
+			}
+		} else {
+			title = fmt.Sprintf("NO TITLE %s", e.Path)
+		}
+
+		html, err := io.ReadAll(&buf)
+		if err != nil {
+			return err
+		}
+
+		comp := p.entryTemplate(html)
+
+		entries[e.Path] = entry{
+			title:    title,
+			path:     e.Path,
+			summary:  "no summary",
+			contents: comp,
+		}
+	}
+
+	p.entries = entries
+
+	return nil
+}
+
+func (p *Blog) listPosts(w http.ResponseWriter, r *http.Request) {
+	err := p.blogEntryList(p.entries).Render(r.Context(), w)
 	if err != nil {
 		rerrors.InternalError(err).ServeHTTP(w, r)
 	}
 }
 
-templ (p *Blog) blogEntryList(entries []forgejoFile) {
+templ (p *Blog) blogEntryList(entries map[string]entry) {
 	@layouts.Page() {
 		<ul>
 			for _, e := range entries {
-				<li><a href={ templ.SafeURL(path.Join(".", e.Path)) }>{ e.Name }</a></li>
+				<li><a href={ templ.SafeURL(path.Join(".", e.path)) }>{ e.title }</a></li>
 			}
 		</ul>
 	}
 }
 
 func (p *Blog) blogEntry(w http.ResponseWriter, r *http.Request) {
-	_, body, rerr := p.get(fmt.Sprintf("/repos/%s/%s/raw/%s", p.owner, p.repo, r.PathValue("entry")))
-	if rerr != nil {
-		rerr.ServeHTTP(w, r)
+	e, ok := p.entries[r.PathValue("entry")]
+	if !ok {
+		rerrors.NotFound().ServeHTTP(w, r)
 		return
 	}
 
-	buf := bytes.NewBuffer([]byte(""))
-	err := p.md.Convert(body, buf)
-	if err != nil {
-		rerrors.InternalError(errors.New("failed to render markdown"), err).ServeHTTP(w, r)
-		return
-	}
-
-	html, err := io.ReadAll(buf)
-	if err != nil {
-		rerrors.InternalError(errors.New("failed to read markdown html")).ServeHTTP(w, r)
-		return
-	}
-
-	err = p.entryTemplate(html).Render(r.Context(), w)
+	err := e.contents.Render(r.Context(), w)
 	if err != nil {
 		rerrors.InternalError(errors.New("failed to write response"), err).ServeHTTP(w, r)
 		return

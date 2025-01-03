@@ -15,7 +15,11 @@ func Routes(log *slog.Logger) router.Router {
 	r.Handle("/", &IndexPage{})
 	r.Handle("/about", &AboutPage{})
 
-	b := NewBlog("dot013", "blog", "https://forge.capytal.company/api/v1")
+	b, err := NewBlog("dot013", "blog", "https://forge.capytal.company/api/v1")
+	if err != nil {
+		panic(err)
+	}
+
 	r.Handle("/blog/", b.Routes())
 
 	return r
