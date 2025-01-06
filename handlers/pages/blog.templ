@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"encoding/json"
+	"strings"
 	"errors"
 	"fmt"
 	"net/http"
@@ -19,6 +20,8 @@ import (
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/text"
+	"github.com/yuin/goldmark/ast"
 )
 
 type EntryTemplate func([]byte) templ.Component
@@ -158,6 +161,16 @@ func (p *Blog) init() error {
 				title = strings.Join(parts, "")
 
 				log.Printf("FOUND TITLE %q", title)
+
+				return ast.WalkSkipChildren, nil
+			}
+
+			if n.Kind() == ast.KindParagraph && summary == "" {
+				var tbuf bytes.Buffer
+				p.md.Renderer().Render(&tbuf, body, n)
+				summary = tbuf.String()
+
+				log.Printf("FOUND SUMMARY %q", summary)
 
 				return ast.WalkSkipChildren, nil
 			}
