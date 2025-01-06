@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"path"
 	"log"
+	"time"
 
 	"forge.capytal.company/capytal/www/templates/layouts"
 
@@ -40,10 +41,12 @@ type Blog struct {
 }
 
 type entry struct {
-	title    string
-	path     string
-	summary  string
-	contents templ.Component
+	title        string
+	path         string
+	summary      string
+	creationDate time.Time
+	modifiedDate time.Time
+	contents     templ.Component
 }
 
 type BlogOptions struct {
@@ -201,6 +204,24 @@ func (p *Blog) init() error {
 			summary = fmt.Sprintf("NO RUMMARY %s", e.Path)
 		}
 
+		var created, modified time.Time
+
+		if c, ok := meta["created"]; ok {
+			s, ok := c.(string)
+			if ok {
+				s = strings.Split(s, "T")[0]
+				created, _ = time.Parse(time.DateOnly, s)
+			}
+		}
+
+		if m, ok := meta["modified"]; ok {
+			s, ok := m.(string)
+			if ok {
+				s = strings.Split(s, "T")[0]
+				modified, _ = time.Parse(time.DateOnly, s)
+			}
+		}
+
 		err = p.md.Renderer().Render(&buf, body, node)
 		if err != nil {
 			return err
@@ -214,10 +235,12 @@ func (p *Blog) init() error {
 		comp := p.entryTemplate(html)
 
 		entries[e.Path] = entry{
-			title:    title,
-			path:     e.Path,
-			summary:  summary,
-			contents: comp,
+			title:        title,
+			path:         e.Path,
+			summary:      summary,
+			contents:     comp,
+			creationDate: created,
+			modifiedDate: modified,
 		}
 	}
 
@@ -311,6 +334,7 @@ templ templateList(entries map[string]entry) {
 							<p>
 								@templ.Raw(e.summary)
 							</p>
+							<p>Created { e.creationDate.Format(time.DateOnly) } &bull; Modified { e.modifiedDate.Format(time.DateOnly) }</p>
 						</li>
 					}
 				</ul>
