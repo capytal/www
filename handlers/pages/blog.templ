@@ -126,8 +126,44 @@ func (p *Blog) init() error {
 
 		ctx := parser.NewContext()
 
-		err := p.md.Convert(body, &buf, parser.WithContext(ctx))
+		node := p.md.Parser().Parse(text.NewReader(body), parser.WithContext(ctx))
+
 		var title, summary string
+		err := ast.Walk(node, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
+			if !entering {
+				return ast.WalkContinue, nil
+			}
+
+			if summary != "" && title != "" {
+				return ast.WalkStop, nil
+			}
+
+			if n.Kind() == ast.KindHeading && title == "" {
+				parts := make([]string, 0, n.ChildCount())
+
+				c := n.FirstChild()
+				for {
+					var tbuf bytes.Buffer
+
+					p.md.Renderer().Render(&tbuf, body, c)
+					parts = append(parts, tbuf.String())
+
+					if s := c.NextSibling(); s != nil {
+						c = s
+					} else {
+						break
+					}
+				}
+
+				title = strings.Join(parts, "")
+
+				log.Printf("FOUND TITLE %q", title)
+
+				return ast.WalkSkipChildren, nil
+			}
+
+			return ast.WalkContinue, nil
+		})
 		if err != nil {
 			return err
 		}
@@ -150,6 +186,11 @@ func (p *Blog) init() error {
 			}
 		} else if summary == "" {
 			summary = fmt.Sprintf("NO RUMMARY %s", e.Path)
+		}
+
+		err = p.md.Renderer().Render(&buf, body, node)
+		if err != nil {
+			return err
 		}
 
 		html, err := io.ReadAll(&buf)
@@ -249,8 +290,14 @@ templ templateList(entries map[string]entry) {
 				<ul class="list-none">
 					for _, e := range entries {
 						<li>
-							<h2><a href={ templ.SafeURL(path.Join(".", e.path)) }>{ e.title }</a></h2>
-							<p>{ e.summary }</p>
+							<h2>
+								<a href={ templ.SafeURL(path.Join(".", e.path)) }>
+									@templ.Raw(e.title)
+								</a>
+							</h2>
+							<p>
+								@templ.Raw(e.summary)
+							</p>
 						</li>
 					}
 				</ul>
