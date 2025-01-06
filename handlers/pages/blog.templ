@@ -225,7 +225,7 @@ type forgejoFile struct {
 templ template(html []byte) {
 	@layouts.Page() {
 		<div class="w-100% py-10rem flex justify-center">
-			<main class="w-60vw">
+			<main class="w-60%">
 				@templ.Raw(string(html))
 			</main>
 		</div>
@@ -234,8 +234,8 @@ templ template(html []byte) {
 
 templ templateList(entries map[string]entry) {
 	@layouts.Page() {
-		<div class="w-60%">
-			<main class="py-10rem">
+		<div class="w-100% py-10rem flex justify-center">
+			<main class="w-60%">
 				<h1>Blog</h1>
 				<ul class="list-none">
 					for _, e := range entries {
