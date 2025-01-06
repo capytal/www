@@ -127,20 +127,29 @@ func (p *Blog) init() error {
 		ctx := parser.NewContext()
 
 		err := p.md.Convert(body, &buf, parser.WithContext(ctx))
+		var title, summary string
 		if err != nil {
 			return err
 		}
 
 		meta := meta.Get(ctx)
 
-		var title string
-		if t, ok := meta["title"]; ok {
+		if t, ok := meta["title"]; ok && title == "" {
 			title, ok = t.(string)
 			if !ok {
 				title = "failed to concat string" // aka Yaml "yes" as bool being fucking annoying
 			}
-		} else {
+		} else if title == "" {
 			title = fmt.Sprintf("NO TITLE %s", e.Path)
+		}
+
+		if s, ok := meta["summary"]; ok && summary == "" {
+			summary, ok = s.(string)
+			if !ok {
+				summary = "failed to concat string" // aka Yaml "yes" as bool being fucking annoying
+			}
+		} else if summary == "" {
+			summary = fmt.Sprintf("NO RUMMARY %s", e.Path)
 		}
 
 		html, err := io.ReadAll(&buf)
@@ -153,7 +162,7 @@ func (p *Blog) init() error {
 		entries[e.Path] = entry{
 			title:    title,
 			path:     e.Path,
-			summary:  "no summary",
+			summary:  summary,
 			contents: comp,
 		}
 	}
