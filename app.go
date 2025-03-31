@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"io"
 	"io/fs"
@@ -96,9 +97,8 @@ func (app *app) setup() {
 	router.Handle("/assets/", http.StripPrefix("/assets/", http.FileServerFS(app.assets)))
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		acceptedLang := r.Header.Get("Accept-Language")
-		if strings.Contains(acceptedLang, "pt-") && r.URL.Query().Get("lang") == "" {
-			http.Redirect(w, r, "/?lang=pt", http.StatusSeeOther)
+		if r.URL.Query().Get("lang") == "" {
+			langRedirect(w, r)
 		}
 
 		err := app.templates.ExecuteTemplate(w, "homepage", map[string]any{
@@ -110,6 +110,10 @@ func (app *app) setup() {
 		}
 	})
 	router.HandleFunc("/README.md/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("lang") == "" {
+			langRedirect(w, r)
+		}
+
 		err := app.templates.ExecuteTemplate(w, "readme", map[string]any{
 			"Lang": r.URL.Query().Get("lang"),
 		})
@@ -122,6 +126,10 @@ func (app *app) setup() {
 	blogEN := app.blogEN()
 	blogPT := app.blogPT()
 	router.Handle("/blog/", http.StripPrefix("/blog/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("lang") == "" {
+			langRedirect(w, r)
+		}
+
 		switch r.URL.Query().Get("lang") {
 		case "pt":
 			blogPT.ServeHTTP(w, r)
@@ -131,6 +139,13 @@ func (app *app) setup() {
 	})))
 
 	app.router = router
+}
+
+func langRedirect(w http.ResponseWriter, r *http.Request) {
+	acceptedLang := r.Header.Get("Accept-Language")
+	if strings.Contains(acceptedLang, "pt") {
+		http.Redirect(w, r, fmt.Sprintf("%s?lang=pt", r.URL.Path), http.StatusSeeOther)
+	}
 }
 
 func (app *app) blogEN() blogo.Blogo {
