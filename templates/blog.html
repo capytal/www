@@ -1,0 +1,23 @@
+{{define "blog"}}
+{{template "layout-page-start" (args "Title" "Blog")}}
+<div class="flex h-full w-full justify-center pt-[30vh]">
+	<div class="text-center">
+		<header class="mb-10 flex justify-center">
+			<h1>Blog</h1>
+		</header>
+		<main>
+			<ul class="flex list-none flex-col gap-3 underline underline-offset-4" id="blog-entries">
+				{{range $link, $lang := .}}
+				<li class="opacity-80 transition-opacity hover:opacity-100">
+					<a href="/blog/{{$link}}?lang={{$lang}}">/blog/{{$link}}</a>
+				</li>
+				{{end}}
+			</ul>
+		</main>
+		<footer class="mx-10 mb-5 mt-10 min-h-[10vh] text-center opacity-50 md:mx-auto md:w-[80%]">
+			<p>&copy; <a href="https://capytal.cc">Capytal</a></p>
+		</footer>
+	</div>
+</div>
+{{template "layout-page-end"}}
+{{end}}

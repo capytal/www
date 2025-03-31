@@ -1,0 +1,17 @@
+{{define "partials-status"}}
+{{template "layout-page-start" (args "Title" .Title)}}
+<main class="justify-center align-middle w-full h-full">
+	<div class="text-center">
+		<h1>{{.StatusCode}}</h1>
+		<p>{{.Message}}</p>
+		<a href="{{.Redirect}}">
+			{{if .RedirectMessage}}
+			{{.RedirectMessage}}
+			{{else}}
+			Go back
+			{{end}}
+		</a>
+	</div>
+</main>
+{{template "layout-page-end"}}
+{{end}}

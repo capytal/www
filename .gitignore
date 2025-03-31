@@ -1,6 +1,6 @@
-node_modules
-.env
-uno.css
-*_templ.go
-*_templ.txt
 .dist
+out.css
+.tmp
+.env
+*.db
+vendor

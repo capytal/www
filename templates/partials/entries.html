@@ -1,0 +1,9 @@
+{{define "blog-entries"}}
+{{range $_, $entry := .}}
+<ul class="list-none">
+	<li>
+		<a href="{{$entry}}">{{$entry}}</a>
+	</li>
+</ul>
+{{end}}
+{{end}}

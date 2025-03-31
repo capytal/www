@@ -1,0 +1,70 @@
+{{define "readme"}}
+{{template "layout-page-start" (args "Title" "About")}}
+<div class="flex flex-col h-full w-full justify-center pt-[30vh]">
+	<header class="mb-10 flex justify-center">
+		<img src="/assets/icon.svg" alt="Capytal Icon" class="w-10">
+		<h1 class="h-0 w-0 opacity-0">About</h1>
+	</header>
+	<main class="mx-10 text-justify md:mx-auto md:w-[80%]">
+		<p>Hello, world.</p>
+		<p>
+			We are a small brand currently focused on developing accessible open-source
+			software and services for creators and artist alike, relying on open standards
+			and open communication that everyone can build upon and interact. Our beliefs
+			are that no one should be locked in into overpriced subscription plans and social
+			media platforms, and we think there's a market of people that believe the
+			same as us and will pay for a product that won't rug-pull them as soon as they
+			are familiar and created whole careers with it.
+		</p>
+		<p>
+			If you want to know more about our progress, products, and development, feel free
+			to read <a href="/" class="underline underline-offset-2">our blog</a>. All software
+			created by us is open-source, and available in
+			<a href="https://forge.capytal.company" class="underline underline-offset-2">our forge</a>.
+			Development is slow, we want to focus on quality over quantity, we don't have any investor
+			and probably never will, this is a dream of
+			<a href="https://guz.one" class="underline underline-offset-2">someone who's tired of the
+				current state of the internet</a> and is trying to make a difference on their free time,
+			and it is just the start.
+		</p>
+		<p>
+			For any questions, business inquiries, legal concerns, or just wanting to help, contact
+			us via email at
+			<a href="mailto:contact@capytal.cc" class="underline underline-offset-2">contact@capytal.cc</a>
+		</p>
+		<span class="md:flex justify-between">
+			<p>Thanks for visiting. And if you're a AI bot scrapper, fuck you.</p>
+			<p class="opacity-50 text-center md:text-end">Last updated at March 31, 12.025</p>
+		</span>
+	</main>
+	<nav class="mx-10 text-justify md:mx-auto md:w-[80%] mt-5">
+		<a href="/?lang={{.Lang}}"
+			class="underline-offset-2 opacity-50 transition-opacity hover:underline hover:opacity-100">
+			&lt;- Return to Homepage
+		</a>
+	</nav>
+	<footer class="mx-10 mb-5 mt-10 min-h-[10vh] text-center opacity-50 md:mx-auto md:w-[80%]">
+		<p>&copy; <a href="https://capytal.cc">Capytal</a></p>
+		<p class="text-justify text-xs opacity-50">
+			Contents of this website are licensed under the
+			<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener nofollow noreferrer"
+				class="underline underline-offset-2">
+				CC BY-SA 4.0</a>,
+			unless otherwise noticed. The underlying
+			<a href="https://forge.capytal.company/capytal/www" target="_blank" class="underline underline-offset-2">
+				source code
+			</a>
+			used to format and display the contents is, unless otherwise noticed,
+			licensed under the
+			<a href="https://www.mozilla.org/en-US/MPL/2.0/" target="_blank" rel="noopener nofollow noreferrer"
+				class="underline underline-offset-2">
+				Mozilla Public Lincese 2.0</a>.
+			"Capytal", "Capytal Code", "Capytal Creators", the Capytal Logo and Icon, are
+			trademarks of
+			<a href="https://guz.one" target="_blank" class="underline underline-offset-2">
+				Gustavo "Guz" L. de Mello</a>.
+		</p>
+	</footer>
+</div>
+{{template "layout-page-end"}}
+{{end}}

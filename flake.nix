@@ -1,14 +1,12 @@
 {
-  description = "My development environment";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    templ.url = "github:a-h/templ?ref=v0.3.819";
   };
   outputs = {
-    self,
     nixpkgs,
+    self,
     ...
-  } @ inputs: let
+  }: let
     systems = [
       "x86_64-linux"
       "aarch64-linux"
@@ -19,42 +17,31 @@
       nixpkgs.lib.genAttrs systems (system: let
         pkgs = import nixpkgs {inherit system;};
       in
-        f system pkgs);
-    templ = system: inputs.templ.packages.${system}.templ;
+        f pkgs);
   in {
-    packages = forAllSystems (system: pkgs: let
-      musl = pkgs.musl;
-      derivation =
-        pkgs.buildGoModule {
-        };
-    in {
-      default = derivation;
-    });
-
-    devShells = forAllSystems (system: pkgs: {
+    devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
-        CGO_ENABLED = "0";
+        CGO_ENABLED = "1";
         hardeningDisable = ["all"];
 
         buildInputs = with pkgs; [
-          # Javascript tools
-          eslint_d
-          nodejs_22
-          nodePackages_latest.eslint
-
           # Go tools
           go
-          gofumpt
           golangci-lint
-          golines
+          gofumpt
           gotools
           delve
-          (templ system)
-          gopls
+
+          # TailwindCSS
+          tailwindcss_4
 
           # Sqlite tools
           sqlite
           lazysql
+          litecli
+
+          # S3
+          awscli
         ];
       };
     });

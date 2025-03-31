@@ -1,0 +1,37 @@
+{{define "blog-post"}}
+{{template "layout-page-start" (args "Title" "Capytal")}}
+<div class="h-full w-full pt-[30vh]">
+	<nav class="mx-10 text-justify md:mx-auto md:w-[80%]">
+		<a href="/?lang={{.Lang}}"
+			class="underline-offset-2 opacity-50 transition-opacity hover:underline hover:opacity-100">
+			&lt;- Return to Homepage
+		</a>
+	</nav>
+	<main class="mx-10 text-justify md:mx-auto md:w-[80%]" id="blog-post">
+		{{.Content}}
+	</main>
+	<footer class="mx-10 mb-5 mt-10 min-h-[10vh] text-center opacity-50 md:mx-auto md:w-[80%]">
+		<p>&copy; <a href="https://capytal.cc">Capytal</a></p>
+		<p class="text-justify text-xs opacity-50">
+			Contents of this website are licensed under the
+			<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener nofollow noreferrer"
+				class="underline underline-offset-2">
+				CC BY-SA 4.0</a>,
+			unless otherwise noticed. The underlying
+			<a href="https://forge.capytal.company/capytal/www" target="_blank" class="underline underline-offset-2">
+				source code
+			</a>
+			used to format and display the contents is, unless otherwise noticed,
+			licensed under the
+			<a href="https://www.mozilla.org/en-US/MPL/2.0/" target="_blank" rel="noopener nofollow noreferrer"
+				class="underline underline-offset-2">
+				Mozilla Public Lincese 2.0</a>.
+			"Capytal", "Capytal Code", "Capytal Creators", the Capytal Logo and Icon, are
+			trademarks of
+			<a href="https://guz.one" target="_blank" class="underline underline-offset-2">
+				Gustavo "Guz" L. de Mello</a>.
+		</p>
+	</footer>
+</div>
+{{template "layout-page-end"}}
+{{end}}
