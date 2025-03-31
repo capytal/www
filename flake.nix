@@ -21,7 +21,7 @@
   in {
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
-        CGO_ENABLED = "1";
+        CGO_ENABLED = "0";
         hardeningDisable = ["all"];
 
         buildInputs = with pkgs; [
@@ -34,15 +34,35 @@
 
           # TailwindCSS
           tailwindcss_4
-
-          # Sqlite tools
-          sqlite
-          lazysql
-          litecli
-
-          # S3
-          awscli
         ];
+      };
+    });
+    packages = forAllSystems (pkgs: {
+      default = self.packages.${pkgs.system}.capytalcc;
+      capytalcc = pkgs.buildGoModule {
+        name = "capytal.cc";
+        pname = "capytal.cc";
+
+        version = "0.1.0";
+
+        src = ./.;
+
+        nativeBuildInputs = with pkgs; [
+          tailwindcss_4
+        ];
+
+        vendorHash = "sha256-aJK6vn76d1k9hWhUu+OBq3r9tM6uuqxAdDjiuwMOMTU=";
+
+        preBuild = ''
+          tailwindcss \
+          	-i ./assets/stylesheets/tailwind.css \
+          	-o ./assets/stylesheets/out.css \
+          	--minify
+        '';
+
+        meta = {
+          mainProgram = "capytal.cc";
+        };
       };
     });
   };

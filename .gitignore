@@ -4,3 +4,5 @@ out.css
 .env
 *.db
 vendor
+tmb
+result
