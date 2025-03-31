@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	patterns  = []string{"*.html", "layouts/*.html", "partials/*.html"}
+	patterns  = []string{"*.html", "layouts/*.html", "partials/*.html", "components/*.html"}
 	functions = template.FuncMap{
 		"args": func(pairs ...any) (map[string]any, error) {
 			if len(pairs)%2 != 0 {
@@ -35,7 +35,7 @@ var (
 	}
 )
 
-//go:embed *.html layouts/*.html partials/*.html
+//go:embed *.html layouts/*.html partials/*.html components/*.html
 var embedded embed.FS
 
 var temps = template.Must(template.New("templates").Funcs(functions).ParseFS(embedded, patterns...))
