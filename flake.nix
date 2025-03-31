@@ -65,5 +65,57 @@
         };
       };
     });
+    nixosModules = {
+      default = self.nixosModules.capytalcc;
+      capytalcc = {
+        config,
+        lib,
+        pkgs,
+        ...
+      }: let
+        cfg = config.services.capytalcc.web;
+      in {
+        options.services.capytalcc.web = with lib;
+        with lib.types; {
+          enable = mkEnableOption "";
+          port = mkOption {
+            type = port;
+            default = 7332;
+          };
+          package = mkOption {
+            type = package;
+            default = self.packages.${pkgs.system}.default;
+          };
+          user = mkOption {
+            type = str;
+            default = "capytalcc-web";
+          };
+          group = mkOption {
+            type = str;
+            default = cfg.user;
+          };
+        };
+        config = with lib;
+          mkIf cfg.enable {
+            systemd.services."capytalcc-web" = {
+              after = ["network.target"];
+              wantedBy = ["multi-user.target"];
+              serviceConfig = {
+                Type = "simple";
+                User = cfg.user;
+                Group = cfg.group;
+                ExecStart = "${lib.escapeShellArg (lib.getExe cfg.package)} web -port ${toString cfg.port}";
+                Restart = "on-success";
+              };
+            };
+
+            users.users."${cfg.user}" = {
+              isSystemUser = true;
+              group = cfg.group;
+            };
+            users.groups."${cfg.group}" = {};
+          };
+      };
+    };
   };
 }
