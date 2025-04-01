@@ -104,7 +104,7 @@
                 Type = "simple";
                 User = cfg.user;
                 Group = cfg.group;
-                ExecStart = "${lib.escapeShellArg (lib.getExe cfg.package)} web -port ${toString cfg.port}";
+                ExecStart = "${lib.escapeShellArg (lib.getExe cfg.package)} -port ${toString cfg.port}";
                 Restart = "on-success";
               };
             };
