@@ -1,5 +1,5 @@
 {{define "blog-post"}}
-{{template "layout-page-start" (args "Title" "Capytal")}}
+{{template "layout-page-start" (args "Title" .Title)}}
 <div class="h-full w-full pt-[30vh]">
 	{{template "nav-bar" (args "Lang" .Lang)}}
 	<main class="mx-10 text-justify md:mx-auto md:w-[80%]" id="blog-post">

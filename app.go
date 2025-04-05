@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"regexp"
 	"slices"
 	"sort"
 	"strings"
@@ -219,13 +220,24 @@ func (r *blogPostRenderer) Name() string {
 	return "capytal-blogpostrenderer-renderer"
 }
 
+var re = regexp.MustCompile(`<h1>(.*?)</h1>`)
+
 func (r *blogPostRenderer) Render(src fs.File, w io.Writer) error {
 	c, err := io.ReadAll(src)
 	if err != nil {
 		return err
 	}
 
+	m := re.FindStringSubmatch(string(c))
+
+	title := "Blog"
+	if len(m) > 1 {
+		t := strings.TrimSuffix(strings.TrimPrefix(m[0], "<h1>"), "</h1>")
+		title = fmt.Sprintf("%s - Capytal's Blog", t)
+	}
+
 	return r.templates.ExecuteTemplate(w, "blog-post", map[string]any{
+		"Title":   title,
 		"Lang":    r.lang,
 		"Content": template.HTML(string(c)),
 	})
