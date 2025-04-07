@@ -78,6 +78,79 @@
 			however, we may use said technologies to provide core functionality on our Services, such data
 			in most cases is by default not personally-identifiable or used to track you or specific users.
 		</p>
+		<p>
+			The following information is collected to provide us analytical data:
+		</p>
+		<dl class="m-5">
+			<dt class="font-bold" id="page-events">
+				Page Events
+			</dt>
+			<dd>
+				When you access or exits a page in one of our Services, we collect that information for
+				to our servers. Information collected includes but is not exhaustive to:
+				<ul class="list-disc m-5">
+					<li id="events-timestamps">
+						Timestamps of the event;
+					<li id="events-generated-id">
+						A randomly generated ID;
+					</li>
+					<li id="event-type">
+						Event type ("load" or "unload");
+					</li>
+					<li id="event-page-url">
+						Page URL;
+					</li>
+					<li id="event-referrer-url">
+						Referrer URL;
+					</li>
+					<li id="event-new-visitor">
+						Is you are a new visitor or not
+						<a href="#unique-visitors" class="italic opacity-50">
+							(See below how we track unique visitors);</a>
+					</li>
+					<li id="event-visited-before">
+						Has you visited the same page before
+						<a href="#unique-visitors" class="italic opacity-50">
+							(See below how we track unique visitors);</a>
+					</li>
+					<li id="event-timezone">
+						Timezone of your browser or system;
+					</li>
+					<li id="event-time-spent">
+						Time spent on a page in milliseconds;
+					</li>
+					<li id="event-metadata">
+						Additional metadata about events (such as if you are logged on the accessed Service
+						or not, what page theme you are using, clicked links or buttons such as for downloading
+						a file or contacting us).
+					</li>
+				</ul>
+			</dd>
+			<dt class="font-bold mt-5" id="http-headers">
+				HTTP Headers
+			</dt>
+			<dd>
+				Your browser sends us additional data used to better serve our Services. We collect some of
+				this data on our analytics tool: "Accept-Language" header used by your browser; "User-Agent"
+				header, which includes information about your browser type, device and operating system.
+			</dd>
+			<dt class="font-bold mt-5" id="location">
+				Location
+			</dt>
+			<dd>
+				<strong>We do not use IP addresses or IP geolocation to determine your location</strong>.
+				Instead, we determine your country based on
+				<a href="#event-timezone" class="italic">your browser's timezone</a>. Capytal cannot determine your
+				exact city or region, this is intentional to preserve end user privacy.
+			</dd>
+			<dt class="font-bold mt-5" id="accessibility-settings">
+				Accessibility Settings
+			</dt>
+			<dd>
+				Capytal may collect your browser's accessibility settings data to better understand the
+				needs of our users regarding accessibility concerns.
+			</dd>
+		</dl>
 	</main>
 	{{template "nav-bar" (args "Lang" .Lang)}}
 	{{template "footer" (args "Lang" .Lang)}}
