@@ -4,17 +4,16 @@
 		&lt;- {{if (eq .Lang "pt")}}Retornar a página principal{{else}}Return to Homepage{{end}}
 	</a>
 	<ul>
-		{{if (ne .Lang "en")}}
-		<li>
-			<a href="?lang=en" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
-				en-US
-			</a>
-		</li>
-		{{end}}
 		{{if (ne .Lang "pt")}}
 		<li>
 			<a href="?lang=pt" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
 				pt-BR
+			</a>
+		</li>
+		{{else}}
+		<li>
+			<a href="?lang=en" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
+				en-US
 			</a>
 		</li>
 		{{end}}
