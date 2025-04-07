@@ -1,0 +1,50 @@
+{{define "privacy-policy"}}
+{{template "layout-page-start" (args "Title" "Privacy Policy")}}
+<div class="flex flex-col h-full w-full justify-center pt-[20vh]">
+	<header class="mb-10 flex justify-center">
+		<img src="/assets/icon.svg" alt="Capytal Icon" class="w-10">
+		<h1 class="h-0 w-0 opacity-0">About</h1>
+	</header>
+	<main class="mx-10 md:text-justify md:mx-auto md:w-[80%]">
+		<h1>Privacy Policy</h1>
+		<details open="true" class="bg-[#111] p-5 rounded-xl">
+			<summary class="font-bold">Too Long; Didn't Read (TL;DR)</summary>
+			<p>
+				<strong>Our services are developed by people who care about privacy and do not like to have their
+					personal and identifiable data tracked by analytics tools without their consent</strong>.
+				We try our best to keep our services in line with regulations such as
+				<abbr title="General Data Protection Regulation">GDPR</abbr>,
+				<abbr
+					title="General Personal Data Protection Law (Portuguese: Lei Geral de Proteção de Dados Pessoais)">
+					LGDP</abbr>, and <abbr title="California Consumer Privacy Act">CCPA</abbr>, while still providing
+				useful data to understand our users and their priorities. The only type of data collected by our
+				tracking scripts are:
+			</p>
+			<ul class="list-disc p-5">
+				<li>Pages that you visit;</li>
+				<li>Referrer URL;</li>
+				<li>Operating system, browser type and device (User-Agent header);</li>
+				<li>Preferred language (Accept-Language header);</li>
+				<li>Timezone-based location (this limits us to just know the country configured in your system);</li>
+				<li>Accessibility settings;</li>
+				<li>Additional metadata about the pages you visit;</li>
+			</ul>
+			<p>
+				<strong>We do not use cookies to track these informations</strong>, we cannot and do not want to
+				be able to associate an user to any of the said data. The data collected by us is mostly used
+				to understand things such as what operating system we must prioritize support, what accessibility
+				concerns we should take care of more, and what languages we should focus on supporting in our
+				services and websites.
+			</p>
+			<p>
+				<strong>We do not share any of this data to any third-party</strong>, any data provided to us
+				stay with us and it is used just between us and our first-party services. Any shared data
+				is due to integrations such as embedded or referred content (for example, YouTube embedded videos).
+			</p>
+		</details>
+	</main>
+	{{template "nav-bar" (args "Lang" .Lang)}}
+	{{template "footer" (args "Lang" .Lang)}}
+</div>
+{{template "layout-page-end"}}
+{{end}}
