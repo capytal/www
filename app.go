@@ -123,6 +123,19 @@ func (app *app) setup() {
 			return
 		}
 	})
+	router.HandleFunc("/PRIVACY.md/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("lang") == "" {
+			langRedirect(w, r)
+		}
+
+		err := app.templates.ExecuteTemplate(w, "privacy-policy", map[string]any{
+			"Lang": r.URL.Query().Get("lang"),
+		})
+		if err != nil {
+			exception.InternalServerError(err).ServeHTTP(w, r)
+			return
+		}
+	})
 
 	blogEN := app.blogEN()
 	blogPT := app.blogPT()
