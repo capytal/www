@@ -68,6 +68,11 @@
   p {
     margin-top: 1.5rem;
   }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 }
 
 @theme {
