@@ -11,6 +11,9 @@
 				<li class="opacity-80 transition-opacity hover:opacity-100">
 					<a href="/README.md?lang={{.Lang}}">/README.md</a>
 				</li>
+				<li class="opacity-80 transition-opacity hover:opacity-100">
+					<a href="/PRIVACY.md?lang={{.Lang}}">/PRIVACY.md</a>
+				</li>
 				<span hx-get="/blog/?lang={{.Lang}}" hx-trigger="load" hx-select="#blog-entries li" hx-swap="outerHTML"
 					aria-busy="true">
 					<span class="htmx-indicator opacity-50" style="text-decoration: none !important;">
