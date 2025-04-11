@@ -66,12 +66,54 @@
   }
 
   p {
-    margin-top: 1.5rem;
+    margin: 0.7rem 0 0.7rem 0;
   }
 
   a {
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+
+  ul {
+    margin: 0.7rem 0 0.7rem 0;
+  }
+
+  li {
+    list-style: disc;
+    margin-left: 1.5rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    .anchor {
+      opacity: 0%;
+      transition-property: opacity;
+      transition-timing-function: var(--default-transition-timing-function);
+      transition-duration: var(--default-transition-duration);
+      text-decoration: none;
+    }
+  }
+
+  h1:hover,
+  h2:hover,
+  h3:hover,
+  h4:hover,
+  h5:hover,
+  h6:hover {
+    .anchor {
+      opacity: 50%;
+    }
+  }
+
+
+  details {
+    background-color: #111;
+    padding: 1.5rem;
+    border-radius: 1rem;
   }
 }
 
