@@ -21,10 +21,50 @@ import (
 	"forge.capytal.company/loreddev/blogo/plugin"
 	"forge.capytal.company/loreddev/blogo/plugins"
 	"forge.capytal.company/loreddev/blogo/plugins/gitea"
-	"forge.capytal.company/loreddev/blogo/plugins/markdown"
 	"forge.capytal.company/loreddev/x/smalltrip"
 	"forge.capytal.company/loreddev/x/smalltrip/exception"
 	"forge.capytal.company/loreddev/x/smalltrip/middleware"
+	links "github.com/fundipper/goldmark-links"
+	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
+	meta "github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/ast"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer"
+	"github.com/yuin/goldmark/text"
+	callout "gitlab.com/staticnoise/goldmark-callout"
+	"go.abhg.dev/goldmark/anchor"
+)
+
+var md = goldmark.New(
+	goldmark.WithParserOptions(
+		parser.WithAutoHeadingID(),
+	),
+	goldmark.WithExtensions(
+		extension.Footnote,
+		extension.GFM,
+		extension.DefinitionList,
+		extension.Typographer,
+		highlighting.NewHighlighting(
+			highlighting.WithStyle("catppuccin-mocha"),
+		),
+		meta.New(meta.WithStoresInDocument()),
+		&anchor.Extender{},
+		links.NewExtender(
+			map[string]bool{
+				"capytal.cc":            true,
+				"capytal.company":       true,
+				"forge.capytal.company": true,
+				"lored.dev":             true,
+			},
+			map[string]string{
+				"rel":    "nofollow noopener noreferrer",
+				"target": "_blank",
+			},
+		),
+		callout.CalloutExtention,
+	),
 )
 
 func NewApp(opts ...Option) (http.Handler, error) {
@@ -123,13 +163,50 @@ func (app *app) setup() {
 			return
 		}
 	})
-	router.HandleFunc("/PRIVACY.md/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/privacy/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("lang") == "" {
 			langRedirect(w, r)
 		}
 
-		err := app.templates.ExecuteTemplate(w, "privacy-policy", map[string]any{
-			"Lang": r.URL.Query().Get("lang"),
+		lang := ""
+		if l := r.URL.Query().Get("lang"); l != "" && !strings.Contains(l, "en") {
+			lang = fmt.Sprintf("_%s", l)
+		}
+
+		res, err := http.Get(fmt.Sprintf("https://forge.capytal.company/api/v1/repos/capytal/privacy-policy/raw/PRIVACY_POLICY%s.md", lang))
+		if err != nil {
+			exception.InternalServerError(err).ServeHTTP(w, r)
+			return
+		}
+
+		c, err := io.ReadAll(res.Body)
+		if err != nil {
+			exception.InternalServerError(err).ServeHTTP(w, r)
+			return
+		}
+
+		doc := md.Parser().Parse(text.NewReader(c))
+		meta := doc.OwnerDocument().Meta()
+
+		title := "Privacy Policy"
+		if t, ok := meta["title"]; ok {
+			tt, ok := t.(string)
+			if ok {
+				title = tt
+			}
+		}
+
+		f := new(strings.Builder)
+		err = md.Renderer().Render(f, c, doc)
+		if err != nil {
+			exception.InternalServerError(err).ServeHTTP(w, r)
+			return
+		}
+
+		err = app.templates.ExecuteTemplate(w, "privacy-policy", map[string]any{
+			"Title":   title,
+			"Lang":    r.URL.Query().Get("lang"),
+			"Content": template.HTML(f.String()),
 		})
 		if err != nil {
 			exception.InternalServerError(err).ServeHTTP(w, r)
@@ -145,7 +222,7 @@ func (app *app) setup() {
 		}
 
 		switch r.URL.Query().Get("lang") {
-		case "pt":
+		case "pt-BR":
 			blogPT.ServeHTTP(w, r)
 		default:
 			blogEN.ServeHTTP(w, r)
@@ -158,7 +235,7 @@ func (app *app) setup() {
 func langRedirect(w http.ResponseWriter, r *http.Request) {
 	acceptedLang := r.Header.Get("Accept-Language")
 	if strings.Contains(acceptedLang, "pt") {
-		http.Redirect(w, r, fmt.Sprintf("%s?lang=pt", r.URL.Path), http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("%s?lang=pt-BR", r.URL.Path), http.StatusSeeOther)
 	}
 }
 
@@ -171,7 +248,7 @@ func (app *app) blogEN() blogo.Blogo {
 	gitea := gitea.New("capytal", "capytal.cc-blog", "https://forge.capytal.company")
 	blog.Use(gitea)
 
-	blog.Use(&listRenderer{app.templates, "en"})
+	blog.Use(&listRenderer{app.templates, "en-US"})
 
 	rf := plugins.NewFoldingRenderer(plugins.FoldingRendererOpts{
 		Assertions: app.assert,
