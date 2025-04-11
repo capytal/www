@@ -150,12 +150,12 @@ func (app *app) setup() {
 			return
 		}
 	})
-	router.HandleFunc("/README.md/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/about/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("lang") == "" {
 			langRedirect(w, r)
 		}
 
-		err := app.templates.ExecuteTemplate(w, "readme", map[string]any{
+		err := app.templates.ExecuteTemplate(w, "about", map[string]any{
 			"Lang": r.URL.Query().Get("lang"),
 		})
 		if err != nil {
