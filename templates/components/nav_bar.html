@@ -1,18 +1,18 @@
 {{define "nav-bar"}}
 <nav class="mx-10 text-justify md:mx-auto md:w-[80%] mt-5 opacity-50 flex justify-between">
 	<a href="/?lang={{.Lang}}" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
-		&lt;- {{if (eq .Lang "pt")}}Retornar a página principal{{else}}Return to Homepage{{end}}
+		&lt;- {{if (eq .Lang "pt-BR")}}Retornar a página principal{{else}}Return to Homepage{{end}}
 	</a>
 	<ul>
 		{{if (ne .Lang "pt")}}
 		<li>
-			<a href="?lang=pt" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
+			<a href="?lang=pt-BR" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
 				pt-BR
 			</a>
 		</li>
 		{{else}}
 		<li>
-			<a href="?lang=en" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
+			<a href="?lang=en-US" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
 				en-US
 			</a>
 		</li>
