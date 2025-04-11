@@ -249,16 +249,7 @@ func (app *app) blogEN() blogo.Blogo {
 	blog.Use(gitea)
 
 	blog.Use(&listRenderer{app.templates, "en-US"})
-
-	rf := plugins.NewFoldingRenderer(plugins.FoldingRendererOpts{
-		Assertions: app.assert,
-		Logger:     app.log.WithGroup("folding-renderer"),
-	})
-
-	rf.Use(markdown.New())
-	rf.Use(&blogPostRenderer{app.templates, "en"})
-
-	blog.Use(rf)
+	blog.Use(NewBlogPostRenderer(app.templates, "en-US"))
 	blog.Use(plugins.NewPlainText())
 
 	return blog
@@ -275,17 +266,8 @@ func (app *app) blogPT() blogo.Blogo {
 	})
 	blog.Use(gitea)
 
-	blog.Use(&listRenderer{app.templates, "pt"})
-
-	rf := plugins.NewFoldingRenderer(plugins.FoldingRendererOpts{
-		Assertions: app.assert,
-		Logger:     app.log.WithGroup("folding-renderer"),
-	})
-
-	rf.Use(markdown.New())
-	rf.Use(&blogPostRenderer{app.templates, "pt"})
-
-	blog.Use(rf)
+	blog.Use(&listRenderer{app.templates, "pt-BR"})
+	blog.Use(NewBlogPostRenderer(app.templates, "pt-BR"))
 	blog.Use(plugins.NewPlainText())
 
 	return blog
@@ -302,9 +284,21 @@ func (app *app) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type blogPostRenderer struct {
 	templates templates.ITemplate
 	lang      string
+
+	parser   parser.Parser
+	renderer renderer.Renderer
 }
 
 var _ plugin.Renderer = (*blogPostRenderer)(nil)
+
+func NewBlogPostRenderer(templates templates.ITemplate, lang string) *blogPostRenderer {
+	return &blogPostRenderer{
+		templates: templates,
+		lang:      lang,
+		parser:    md.Parser(),
+		renderer:  md.Renderer(),
+	}
+}
 
 func (r *blogPostRenderer) Name() string {
 	return "capytal-blogpostrenderer-renderer"
@@ -318,18 +312,44 @@ func (r *blogPostRenderer) Render(src fs.File, w io.Writer) error {
 		return err
 	}
 
-	m := re.FindStringSubmatch(string(c))
+	doc := r.parser.Parse(text.NewReader(c))
+	meta := doc.OwnerDocument().Meta()
 
 	title := "Blog"
-	if len(m) > 1 {
-		t := strings.TrimSuffix(strings.TrimPrefix(m[0], "<h1>"), "</h1>")
-		title = fmt.Sprintf("%s - Capytal's Blog", t)
+	if t, ok := meta["title"]; ok {
+		tt, ok := t.(string)
+		if ok {
+			title = tt
+		}
+	} else {
+		err := ast.Walk(doc, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
+			if n.Kind().String() != "Heading" {
+				return ast.WalkContinue, nil
+			}
+
+			if h, ok := n.(*ast.Heading); !ok || h.Level > 1 {
+				return ast.WalkContinue, nil
+			}
+
+			// TODO: This is deprecated
+			title = string(n.Text(c))
+			return ast.WalkStop, nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	f := new(strings.Builder)
+	err = r.renderer.Render(f, c, doc)
+	if err != nil {
+		return err
 	}
 
 	return r.templates.ExecuteTemplate(w, "blog-post", map[string]any{
 		"Title":   title,
 		"Lang":    r.lang,
-		"Content": template.HTML(string(c)),
+		"Content": template.HTML(f.String()),
 	})
 }
 
