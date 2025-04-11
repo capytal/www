@@ -3,8 +3,8 @@
 	<a href="/?lang={{.Lang}}" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
 		&lt;- {{if (eq .Lang "pt-BR")}}Retornar a página principal{{else}}Return to Homepage{{end}}
 	</a>
-	<ul>
 		{{if (ne .Lang "pt")}}
+	<ul class="list-none">
 		<li>
 			<a href="?lang=pt-BR" class="underline-offset-2 transition-opacity hover:underline hover:opacity-100">
 				pt-BR
