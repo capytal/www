@@ -4,7 +4,11 @@
 	<ul class="m-0 list-none flex w-full gap-5 justify-center transition-opacity">
 		<li class="inline-block">
 			<a href="/about" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				{{if (eq .Lang "pt-BR")}}
+				Sobre
+				{{else}}
 				About
+				{{end}}
 			</a>
 		</li>
 		<li class="inline-block">
@@ -14,12 +18,20 @@
 		</li>
 		<li class="inline-block">
 			<a href="/privacy" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				{{if (eq .Lang "pt-BR")}}
+				Política de Privacidade
+				{{else}}
 				Privacy Policy
+				{{end}}
 			</a>
 		</li>
 		<li class="inline-block">
 			<a href="https://forge.capytal.company" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				{{if (eq .Lang "pt-BR")}}
+				Código-Aberto
+				{{else}}
 				Open Source
+				{{end}}
 			</a>
 		</li>
 		<!-- <li class="inline-block">
