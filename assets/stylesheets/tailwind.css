@@ -74,6 +74,10 @@
     text-underline-offset: 2px;
   }
 
+  a[target="_blank"]::after {
+    content: '↗';
+  }
+
   ul,
   ol {
     margin: 0.7rem 0 0.7rem 0;
