@@ -81,12 +81,15 @@
   ul,
   ol {
     margin: 0.7rem 0 0.7rem 0;
+    margin-left: 1.5rem;
   }
 
-  ul,
-  ol {
+  ul {
     list-style: disc;
-    margin-left: 1.5rem;
+  }
+
+  ol {
+    list-style: list-decimal;
   }
 
   h1,
