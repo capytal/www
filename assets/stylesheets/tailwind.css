@@ -115,12 +115,15 @@
     }
   }
 
-
   details {
     margin: 1rem 0 1rem 0;
     background-color: #111;
     padding: 1.5rem;
     border-radius: 1rem;
+  }
+
+  hr {
+    color: #181818;
   }
 }
 
