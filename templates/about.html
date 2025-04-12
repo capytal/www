@@ -1,12 +1,16 @@
 {{define "about"}}
+{{if (eq .Lang "pt-BR")}}
+{{template "layout-page-start" (args "Title" "Sobre")}}
+{{else}}
 {{template "layout-page-start" (args "Title" "About")}}
+{{end}}
 <div class="flex flex-col h-full w-full justify-center pt-[20vh]">
 	<header class="mb-10 flex justify-center">
 		<img src="/assets/icon.svg" alt="Capytal Icon" class="w-10">
 		<h1 class="h-0 w-0 opacity-0">About</h1>
 	</header>
 	<main class="mx-10 text-justify md:mx-auto md:w-[80%]">
-		{{if (eq .Lang "pt")}}
+		{{if (eq .Lang "pt-BR")}}
 		<p>Olá, mundo.</p>
 		<p>
 			Nós somos uma pequena marca com o foco em desenvolver produtos e serviços
