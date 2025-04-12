@@ -1,7 +1,47 @@
 {{define "footer"}}
-{{if (eq .Lang "pt")}}
 <footer class="mx-10 mb-5 mt-10 min-h-[10vh] text-center opacity-50 md:mx-auto md:w-[80%]">
-	<p>&copy; <a href="https://capytal.cc">Capytal</a></p>
+	<p>&copy; <a href="https://capytal.cc" class="no-underline">Capytal</a></p>
+	<ul class="m-0 list-none flex w-full gap-5 justify-center transition-opacity">
+		<li class="inline-block">
+			<a href="/about" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				About
+			</a>
+		</li>
+		<li class="inline-block">
+			<a href="/" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Blog
+			</a>
+		</li>
+		<li class="inline-block">
+			<a href="/privacy" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Privacy Policy
+			</a>
+		</li>
+		<li class="inline-block">
+			<a href="https://forge.capytal.company" class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Open Source
+			</a>
+		</li>
+		<!-- <li class="inline-block">
+			<a href="https://social.capytal.company" target="_blank" rel="noopener nofollow noreferrer"
+				class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Fediverse
+			</a>
+		</li>
+		<li class="inline-block">
+			<a href="https://bsky.app/profile/capytal.cc" target="_blank" rel="noopener nofollow noreferrer"
+				class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Bluesky
+			</a>
+		</li>
+		<li class="inline-block">
+			<a href="https://capytal.tumblr.com" target="_blank" rel="noopener nofollow noreferrer"
+				class="no-underline hover:underline opacity-50 hover:opacity-100">
+				Tumblr
+			</a>
+		</li> -->
+	</ul>
+	{{if (eq .Lang "pt-BR")}}
 	<p class="text-justify text-xs opacity-50">
 		Conteúdos desse site são licenciados sob a licença
 		<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener nofollow noreferrer">
@@ -14,10 +54,7 @@
 			href="https://guz.one" target="_blank">
 			Gustavo " Guz" L. de Mello</a>.
 	</p>
-</footer>
-{{else}}
-<footer class="mx-10 mb-5 mt-10 min-h-[10vh] text-center opacity-50 md:mx-auto md:w-[80%]">
-	<p>&copy; <a href="https://capytal.cc">Capytal</a></p>
+	{{else}}
 	<p class="text-justify text-xs opacity-50">
 		Contents of this website are licensed under the
 		<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener nofollow noreferrer">
@@ -29,6 +66,6 @@
 			Mozilla Public License 2.0</a>. "Capytal", "Capytal Code", "Capytal Creators", the Capytal Logo and Icon,
 		are trademarks of <a href="https://guz.one" target="_blank">Gustavo "Guz" L. de Mello</a>.
 	</p>
+	{{end}}
 </footer>
-{{end}}
 {{end}}
