@@ -9,10 +9,10 @@
 		<main>
 			<ul class="flex flex-col gap-3 underline underline-offset-4">
 				<li class="opacity-80 transition-opacity hover:opacity-100">
-					<a href="/README.md?lang={{.Lang}}">/README.md</a>
+					<a href="/about?lang={{.Lang}}">/README.md</a>
 				</li>
 				<li class="opacity-80 transition-opacity hover:opacity-100">
-					<a href="/PRIVACY.md?lang={{.Lang}}">/PRIVACY.md</a>
+					<a href="/privacy?lang={{.Lang}}">/PRIVACY.md</a>
 				</li>
 				<span hx-get="/blog/?lang={{.Lang}}" hx-trigger="load" hx-select="#blog-entries li" hx-swap="outerHTML"
 					aria-busy="true">
