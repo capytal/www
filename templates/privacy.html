@@ -8,6 +8,15 @@
 	</header>
 	<main class="mx-10 md:text-justify md:mx-auto md:w-[80%]">
 		{{.Content}}
+		<hr>
+		<p>
+			{{if (eq .Lang "pt-BR")}}
+			Última atualização:
+			{{else}}
+			Latest update:
+			{{end}}
+			{{.ChangeDate}}
+		</p>
 	</main>
 	{{template "nav-bar" (args "Lang" .Lang)}}
 	{{template "footer" (args "Lang" .Lang)}}

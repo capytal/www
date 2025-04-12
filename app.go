@@ -12,6 +12,7 @@ import (
 	"slices"
 	"sort"
 	"strings"
+	"time"
 
 	"capytal.cc/assets"
 	"capytal.cc/internals/natsort"
@@ -25,6 +26,7 @@ import (
 	"forge.capytal.company/loreddev/x/smalltrip/exception"
 	"forge.capytal.company/loreddev/x/smalltrip/middleware"
 	links "github.com/fundipper/goldmark-links"
+	"github.com/goodsign/monday"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
@@ -196,6 +198,20 @@ func (app *app) setup() {
 			}
 		}
 
+		changeDate, err := time.Parse(time.DateOnly, "2025-04-11")
+		app.assert.Nil(err, "This date should always be valid")
+
+		if d, ok := meta["modified"]; ok {
+			if s, ok := d.(string); ok {
+				t, err := time.Parse(time.RFC3339, s)
+				if err != nil {
+					exception.InternalServerError(err).ServeHTTP(w, r)
+					return
+				}
+				changeDate = t
+			}
+		}
+
 		f := new(strings.Builder)
 		err = md.Renderer().Render(f, c, doc)
 		if err != nil {
@@ -203,10 +219,22 @@ func (app *app) setup() {
 			return
 		}
 
+		locale := r.URL.Query().Get("lang")
+		if locale == "" {
+			locale = "en-US"
+		}
+		locale = strings.Replace(locale, "-", "_", 1)
+
+		format, ok := monday.LongFormatsByLocale[monday.Locale(locale)]
+		if !ok {
+			format = time.DateTime
+		}
+
 		err = app.templates.ExecuteTemplate(w, "privacy-policy", map[string]any{
-			"Title":   title,
-			"Lang":    r.URL.Query().Get("lang"),
-			"Content": template.HTML(f.String()),
+			"Title":      title,
+			"Lang":       r.URL.Query().Get("lang"),
+			"Content":    template.HTML(f.String()),
+			"ChangeDate": monday.Format(changeDate, format, monday.Locale(locale)),
 		})
 		if err != nil {
 			exception.InternalServerError(err).ServeHTTP(w, r)
