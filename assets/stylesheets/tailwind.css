@@ -74,11 +74,13 @@
     text-underline-offset: 2px;
   }
 
-  ul {
+  ul,
+  ol {
     margin: 0.7rem 0 0.7rem 0;
   }
 
-  ul {
+  ul,
+  ol {
     list-style: disc;
     margin-left: 1.5rem;
   }
