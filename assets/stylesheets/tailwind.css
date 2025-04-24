@@ -160,4 +160,89 @@
     border-color: transparent;
   }
 
+  details[data-callout="note"],
+  details[data-callout="summary"],
+  details[data-callout="abstract"],
+  details[data-callout="tldr"],
+  details[data-callout="info"],
+  details[data-callout="todo"],
+  details[data-callout="tip"],
+  details[data-callout="hint"],
+  details[data-callout="important"],
+  details[data-callout="success"],
+  details[data-callout="check"],
+  details[data-callout="done"],
+  details[data-callout="question"],
+  details[data-callout="help"],
+  details[data-callout="faq"],
+  details[data-callout="warning"],
+  details[data-callout="caution"],
+  details[data-callout="attention"],
+  details[data-callout="failure"],
+  details[data-callout="fail"],
+  details[data-callout="danger"],
+  details[data-callout="error"],
+  details[data-callout="bug"],
+  details[data-callout="example"],
+  details[data-callout="quote"],
+  details[data-callout="cite"] {
+    background-color: var(--callout-bg, #111);
+
+    summary {
+      font-weight: bold;
+      color: var(--callout-summary, currentColor);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: calc(var(--spacing) * 2);
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+  }
+
+  details[data-callout="info"],
+  details[data-callout="todo"] {
+    --callout-bg: --alpha(var(--color-cyan-950) / 50%);
+    --callout-summary: var(--color-cyan-500);
+  }
+
+  details[data-callout="tip"],
+  details[data-callout="hint"],
+  details[data-callout="important"] {
+    --callout-bg: --alpha(var(--color-teal-950) / 50%);
+    --callout-summary: var(--color-teal-500);
+  }
+
+  details[data-callout="success"],
+  details[data-callout="check"],
+  details[data-callout="done"] {
+    --callout-bg: --alpha(var(--color-green-950) / 50%);
+    --callout-summary: var(--color-green-500);
+  }
+
+  details[data-callout="question"],
+  details[data-callout="help"],
+  details[data-callout="faq"],
+  details[data-callout="warning"],
+  details[data-callout="caution"],
+  details[data-callout="attention"] {
+    --callout-bg: --alpha(var(--color-orange-950) / 50%);
+    --callout-summary: var(--color-orange-500);
+  }
+
+  details[data-callout="failure"],
+  details[data-callout="fail"],
+  details[data-callout="danger"],
+  details[data-callout="error"],
+  details[data-callout="bug"] {
+    --callout-bg: --alpha(var(--color-red-950) / 50%);
+    --callout-summary: var(--color-red-500);
+  }
+
+  details[data-callout="example"] {
+    --callout-bg: --alpha(var(--color-blue-950) / 50%);
+    --callout-summary: var(--color-blue-500);
+  }
 }
