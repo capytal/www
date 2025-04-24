@@ -51,7 +51,7 @@
           tailwindcss_4
         ];
 
-        vendorHash = "sha256-aJK6vn76d1k9hWhUu+OBq3r9tM6uuqxAdDjiuwMOMTU=";
+        vendorHash = "sha256-s3SMlsbDMCr8npIJDd4G5tcg8MVBnyVZY4TCoVA6mvQ=";
 
         preBuild = ''
           tailwindcss \
