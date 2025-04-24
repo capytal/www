@@ -140,6 +140,9 @@ func (app *app) setup() {
 	router.Handle("/assets/", http.StripPrefix("/assets/", http.FileServerFS(app.assets)))
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		}
 		if r.URL.Query().Get("lang") == "" {
 			langRedirect(w, r)
 		}
