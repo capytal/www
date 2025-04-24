@@ -138,12 +138,26 @@
     }
   }
 
+  details,
+  pre {
     margin: 1rem 0 1rem 0;
     background-color: #111;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  pre {
+    background-color: #111 !important;
   }
 
   hr {
     color: #181818;
+  }
+
+  details {
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent;
   }
 
 }
