@@ -25,6 +25,7 @@ import (
 	"forge.capytal.company/loreddev/x/smalltrip"
 	"forge.capytal.company/loreddev/x/smalltrip/exception"
 	"forge.capytal.company/loreddev/x/smalltrip/middleware"
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	links "github.com/fundipper/goldmark-links"
 	"github.com/goodsign/monday"
 	"github.com/yuin/goldmark"
@@ -49,7 +50,10 @@ var md = goldmark.New(
 		extension.DefinitionList,
 		extension.Typographer,
 		highlighting.NewHighlighting(
-			highlighting.WithStyle("catppuccin-mocha"),
+			highlighting.WithStyle("monokai"),
+			highlighting.WithFormatOptions(
+				chromahtml.WithLineNumbers(true),
+			),
 		),
 		meta.New(meta.WithStoresInDocument()),
 		&anchor.Extender{},
