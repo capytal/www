@@ -122,18 +122,28 @@
     }
   }
 
-  details {
+  table {
+    table-layout: auto;
+    width: 100%;
+    border-radius: 1rem;
+
+    thead {
+      background-color: #111;
+    }
+
+    th,
+    td {
+      border: 1px solid #111;
+      padding: 0.5rem;
+    }
+  }
+
     margin: 1rem 0 1rem 0;
     background-color: #111;
-    padding: 1.5rem;
-    border-radius: 1rem;
   }
 
   hr {
     color: #181818;
   }
-}
 
-@theme {
-  --font-sans: "Karla", sans-serif;
 }
